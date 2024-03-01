@@ -1,0 +1,4 @@
+name: DisasterPlugin
+version: '${project.version}'
+main: mtkb.disaster.disasterplugin.DisasterPlugin
+api-version: '1.20'
