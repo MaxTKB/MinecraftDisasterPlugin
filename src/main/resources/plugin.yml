@@ -2,3 +2,8 @@ name: DisasterPlugin
 version: '${project.version}'
 main: mtkb.disaster.disasterplugin.DisasterPlugin
 api-version: '1.20'
+commands:
+  disaster:
+    description: Commands associated with the disaster plugin.
+    usage: /disaster (enable|disable|force) <time|disasterId|effectId> <countdown>
+    aliases: [dis, d]
