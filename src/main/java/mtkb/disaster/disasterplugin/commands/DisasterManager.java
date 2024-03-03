@@ -27,6 +27,10 @@ public class DisasterManager {
         disasterList.add(()-> potionEffectDisaster(-1));
     }
 
+    public void setTime(double time){
+        this.time = time;
+    }
+
     public static void performDisaster() {
         int randomNumber = random.nextInt(disasterList.size());
         disasterList.get(randomNumber).run();

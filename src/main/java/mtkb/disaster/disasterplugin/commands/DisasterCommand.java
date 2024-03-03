@@ -28,6 +28,16 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage("Disaster plugin is already enabled.");
                 } else {
                     plugin.setDisasterEnabled(true);
+                    if(args.length >=2) {
+                        try {
+                            double newTime = Double.parseDouble(args[1]);
+                            plugin.setTime(newTime);
+                            Bukkit.broadcast(new TextComponent("Disaster timer set to "+newTime+" minutes. A random disaster will occur every "+newTime+" minutes."));
+                        }
+                        catch (NumberFormatException e) {
+                            sender.sendMessage("Invalid time value. Please provide a valid number. Using default value instead.");
+                        }
+                    }
                     Bukkit.broadcast(new TextComponent("Disaster plugin enabled."));
                     plugin.startDisasterCycle();
                 }

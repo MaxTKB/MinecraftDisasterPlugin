@@ -14,6 +14,7 @@ public final class DisasterPlugin extends JavaPlugin {
     private double time = 5.0;
     private int countdown = 10;
     private int taskId; //To store the ID of the scheduled task
+    private DisasterManager disasterManager;
 
     @Override
     public void onEnable() {
@@ -23,7 +24,7 @@ public final class DisasterPlugin extends JavaPlugin {
         getCommand("disaster").setExecutor(new DisasterCommand(this));
         getCommand("disaster").setTabCompleter(new DisasterCommand(this));
         BukkitScheduler scheduler = getServer().getScheduler();
-        DisasterManager disasterManager = new DisasterManager(scheduler, time);
+        disasterManager = new DisasterManager(scheduler, time);
     }
 
     public boolean isDisasterEnabled() {
@@ -40,6 +41,7 @@ public final class DisasterPlugin extends JavaPlugin {
 
     public void setTime(double time) {
         this.time = time;
+        disasterManager.setTime(time);
     }
 
     public int getCountdown() {
