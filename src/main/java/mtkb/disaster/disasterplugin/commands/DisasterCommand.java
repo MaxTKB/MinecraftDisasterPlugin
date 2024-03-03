@@ -26,7 +26,8 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 // Enable disaster plugin here
                 if (plugin.isDisasterEnabled()) {
                     sender.sendMessage("Disaster plugin is already enabled.");
-                } else {
+                }
+                else {
                     plugin.setDisasterEnabled(true);
                     if(args.length >=2) {
                         try {
@@ -38,11 +39,23 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                             sender.sendMessage("Invalid time value. Please provide a valid number. Using default value instead.");
                         }
                     }
+
+                    if(args.length >=3) {
+                        try {
+                            int newCountdown = Integer.parseInt(args[2]);
+                            plugin.setCountdown(newCountdown);
+                            Bukkit.broadcast(new TextComponent("Disaster countdown set to "+newCountdown+" seconds. Disaster timer will start in "+newCountdown+" seconds."));
+                        }
+                        catch (NumberFormatException e){
+                            sender.sendMessage("Invalid countdown value. Please provide a valid number. Using default value instead");
+                        }
+                    }
                     Bukkit.broadcast(new TextComponent("Disaster plugin enabled."));
                     plugin.startDisasterCycle();
                 }
                 return true;
-            } else if (args[0].equalsIgnoreCase("disable")) {
+            }
+            else if (args[0].equalsIgnoreCase("disable")) {
                 if (plugin.isDisasterEnabled()) {
                     plugin.setDisasterEnabled(false);
                     Bukkit.broadcast(new TextComponent("Disaster plugin disabled"));
@@ -51,7 +64,8 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage("Disaster plugin is already disabled.");
                 }
                 return true;
-            } else if (args[0].equalsIgnoreCase("force")) {
+            }
+            else if (args[0].equalsIgnoreCase("force")) {
                 if (args.length >= 2) {
                     String disasterType = args[1].toLowerCase();
                     switch (disasterType) {
