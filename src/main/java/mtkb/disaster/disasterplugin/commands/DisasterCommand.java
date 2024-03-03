@@ -135,12 +135,18 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             completions.add("force");
         }
         else if (args.length==2) {
-            if (args[0].equalsIgnoreCase("force")) {
+            if (args[0].equalsIgnoreCase("enable")) {
+                completions.add("5"); //Time between disasters
+            }
+            else if (args[0].equalsIgnoreCase("force")) {
                 completions.add("potion");
             }
         }
         else if (args.length==3) {
-            if (args[0].equalsIgnoreCase("force") && args[1].equalsIgnoreCase("potion")){
+            if (args[0].equalsIgnoreCase("enable")) {
+                completions.add("10"); //Countdown time
+            }
+            else if (args[0].equalsIgnoreCase("force") && args[1].equalsIgnoreCase("potion")){
                 completions.add("blindness");
                 completions.add("darkness");
                 completions.add("hunger");
