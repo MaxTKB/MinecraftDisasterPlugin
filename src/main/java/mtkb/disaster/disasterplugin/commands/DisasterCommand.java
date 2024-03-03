@@ -21,39 +21,35 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-            if(args[0].equalsIgnoreCase("enable")) {
+        if(args.length >= 1) {
+            if (args[0].equalsIgnoreCase("enable")) {
                 // Enable disaster plugin here
                 if (plugin.isDisasterEnabled()) {
                     sender.sendMessage("Disaster plugin is already enabled.");
-                }
-                else {
+                } else {
                     plugin.setDisasterEnabled(true);
                     Bukkit.broadcast(new TextComponent("Disaster plugin enabled."));
                     plugin.startDisasterCycle();
                 }
                 return true;
-            }
-            else if (args[0].equalsIgnoreCase("disable")) {
-                if(plugin.isDisasterEnabled()){
+            } else if (args[0].equalsIgnoreCase("disable")) {
+                if (plugin.isDisasterEnabled()) {
                     plugin.setDisasterEnabled(false);
                     Bukkit.broadcast(new TextComponent("Disaster plugin disabled"));
                     plugin.stopDisasterCycle();
-                }
-                else {
+                } else {
                     sender.sendMessage("Disaster plugin is already disabled.");
                 }
                 return true;
-            }
-            else if (args[0].equalsIgnoreCase("force")) {
-                if(args.length>=2) {
+            } else if (args[0].equalsIgnoreCase("force")) {
+                if (args.length >= 2) {
                     String disasterType = args[1].toLowerCase();
                     switch (disasterType) {
                         case "potion":
-                            if (args.length>=3) {
+                            if (args.length >= 3) {
                                 int effectId = getEffectId(args[2].toLowerCase());
                                 DisasterManager.potionEffectDisaster(effectId);
-                            }
-                            else {
+                            } else {
                                 DisasterManager.forceDisaster(0);
                             }
                             break;
@@ -64,6 +60,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 }
                 return true;
             }
+        }
         return false;
     }
 
