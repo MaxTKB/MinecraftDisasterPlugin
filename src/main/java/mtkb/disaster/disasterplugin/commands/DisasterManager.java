@@ -72,13 +72,13 @@ public class DisasterManager {
                     potionEffect = new PotionEffect(PotionEffectType.DARKNESS, duration, 0);
                     break;
                 case 2:
-                    potionEffect = new PotionEffect(PotionEffectType.HUNGER, duration, 0);
+                    potionEffect = new PotionEffect(PotionEffectType.HUNGER, duration, 1);
                     break;
                 case 3:
                     potionEffect = new PotionEffect(PotionEffectType.LEVITATION, duration, 0);
                     break;
                 case 4:
-                    potionEffect = new PotionEffect(PotionEffectType.SLOW_DIGGING, duration, 0);
+                    potionEffect = new PotionEffect(PotionEffectType.SLOW_DIGGING, duration, 1);
                     break;
                 case 5:
                     potionEffect = new PotionEffect(PotionEffectType.CONFUSION, duration, 0);
@@ -87,10 +87,10 @@ public class DisasterManager {
                     potionEffect = new PotionEffect(PotionEffectType.POISON, duration, 0);
                     break;
                 case 7:
-                    potionEffect = new PotionEffect(PotionEffectType.SLOW, duration, 0);
+                    potionEffect = new PotionEffect(PotionEffectType.SLOW, duration, 1);
                     break;
                 case 8:
-                    potionEffect = new PotionEffect(PotionEffectType.WEAKNESS, duration, 0);
+                    potionEffect = new PotionEffect(PotionEffectType.WEAKNESS, duration, 1);
                     break;
                 case 9:
                     potionEffect = new PotionEffect(PotionEffectType.WITHER, duration, 0);
