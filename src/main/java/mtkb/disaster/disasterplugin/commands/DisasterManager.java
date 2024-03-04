@@ -29,6 +29,7 @@ public class DisasterManager {
         //disasterList.add(this::testDisaster); How to add disasters to list
         //disasterList.add(()-> exampleDisaster(x)); How to add disaster which takes a parameter
         disasterList.add(()-> potionEffectDisaster(-1));
+        disasterList.add(()-> teleportDisaster());
     }
 
     public void setTime(double time){
@@ -107,6 +108,17 @@ public class DisasterManager {
             if (potionEffect != null) {
                 player.addPotionEffect(potionEffect);
             }
+        }
+    }
+
+    private static void teleportDisaster() {
+        int teleportRadius = 50;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Location originalLocation = player.getLocation();
+            World world = originalLocation.getWorld();
+            Location newLocation = getSpawnableLocation(player, 50, true);
+            player.teleport(newLocation);
+            Bukkit.broadcastMessage("§aDISASTER: TELEPORT TO RANDOM LOCATION");
         }
     }
 

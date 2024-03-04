@@ -77,6 +77,9 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                                 DisasterManager.forceDisaster(0);
                             }
                             break;
+                        case "teleport":
+                            DisasterManager.forceDisaster(1);
+                            break;
                         default:
                             sender.sendMessage("§cDisaster type not recognized.");
                             break;
@@ -140,6 +143,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             }
             else if (args[0].equalsIgnoreCase("force")) {
                 completions.add("potion");
+                completions.add("teleport");
             }
         }
         else if (args.length==3) {
