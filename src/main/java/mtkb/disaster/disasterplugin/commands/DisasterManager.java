@@ -41,11 +41,21 @@ public class DisasterManager {
         disasterList.get(randomNumber).run();
     }
 
-    public static void forceDisaster(int disasterIndex) {
-        disasterList.get(disasterIndex).run();
+    public static void forceDisaster(List<Integer> disasterParams) {
+        if (disasterParams.isEmpty()) {
+            return;
+        }
+        int disasterIndex = disasterParams.get(0);
+        if (disasterParams.size()>=2) {
+            int effectId = disasterParams.get(1);
+            potionEffectDisaster(effectId);
+        }
+        else {
+            disasterList.get(disasterIndex).run();
+        }
     }
 
-    public static void potionEffectDisaster(int givenId) {
+    private static void potionEffectDisaster(int givenId) {
 
         // List of chosen potion effects and their Id
         // Blindness 0
