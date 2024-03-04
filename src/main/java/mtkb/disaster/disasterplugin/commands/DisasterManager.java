@@ -2,6 +2,10 @@ package mtkb.disaster.disasterplugin.commands;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -104,5 +108,50 @@ public class DisasterManager {
                 player.addPotionEffect(potionEffect);
             }
         }
+    }
+
+    private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
+        int count=0;
+        int maxAttempts=100;
+        Location playerLocation = player.getLocation();
+        World world = player.getWorld();
+        double randX = playerLocation.getX() + random.nextInt(2*radius) - radius;
+        double randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
+        double randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
+        Location newLocation = new Location(world, randX, randY, randZ);
+        while(!isSpawnable(newLocation) && count<maxAttempts) {
+            randX = playerLocation.getX() + random.nextInt(2*radius) - radius;
+            randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
+            randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
+            newLocation = new Location(world, randX, randY, randZ);
+            count++;
+        }
+        //Bukkit.broadcastMessage("Location found on try "+count);
+        if(!isSpawnable(newLocation) && !allowTop){
+            newLocation=playerLocation;
+        }
+        else if(!isSpawnable(newLocation) && allowTop) {
+            Block highestBlock = world.getHighestBlockAt(newLocation);
+            while (highestBlock.getType() == Material.AIR) {
+                highestBlock = highestBlock.getRelative(0,-1,0);
+            }
+            newLocation = highestBlock.getLocation().add(0.5,1,0.5);
+        }
+        return newLocation;
+    }
+
+    private static boolean isSpawnable(Location location){
+        //The block at the feet location
+        Block feetBlock = location.getBlock();
+        //The block at the head location
+        Block headBlock = feetBlock.getRelative(0,1,0);
+        //The block that the mob/player will be standing on
+        Block standBlock = feetBlock.getRelative(0,-1,0);
+
+        return(isAir(feetBlock) && isAir(headBlock) && standBlock.isSolid());
+    }
+
+    private static boolean isAir(Block block) {
+        return(block.getType() == Material.AIR || block.getType() == Material.CAVE_AIR);
     }
 }
