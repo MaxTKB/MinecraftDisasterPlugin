@@ -1,12 +1,9 @@
 package mtkb.disaster.disasterplugin.commands;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -29,7 +26,8 @@ public class DisasterManager {
         //disasterList.add(this::testDisaster); How to add disasters to list
         //disasterList.add(()-> exampleDisaster(x)); How to add disaster which takes a parameter
         disasterList.add(()-> potionEffectDisaster(-1));
-        disasterList.add(()-> teleportDisaster());
+        disasterList.add(DisasterManager::teleportDisaster);
+        disasterList.add(DisasterManager::raidDisaster);
     }
 
     public void setTime(double time){
@@ -129,6 +127,73 @@ public class DisasterManager {
             Location newLocation = getSpawnableLocation(player, 50, true);
             player.teleport(newLocation);
             Bukkit.broadcastMessage("§aDISASTER: TELEPORT TO RANDOM LOCATION");
+        }
+    }
+
+    private static void raidDisaster() {
+        Bukkit.broadcastMessage("§aDISASTER: MAX LEVEL RAID");
+        List<Player> onlinePlayers = (List<Player>) Bukkit.getOnlinePlayers();
+        if (onlinePlayers.isEmpty()) {
+            return;
+        }
+
+        //Choose a random player
+        Player randomPlayer = onlinePlayers.get(random.nextInt(onlinePlayers.size()));
+
+        //Get the player's location
+        Location playerLocation = randomPlayer.getLocation();
+
+        //Get the world
+        World world = playerLocation.getWorld();
+
+        //Get world difficulty
+        Difficulty difficulty = world.getDifficulty();
+
+        int raidRadius = 15;
+
+        //Find a random spawnable block
+        Location raidLocation = getSpawnableLocation(randomPlayer, raidRadius, false);
+
+        switch (difficulty) {
+            case PEACEFUL:
+                Bukkit.broadcastMessage("§cDifficulty set to peaceful, cannot spawn raid.");
+                break;
+            case EASY:
+                for (int i = 0; i < 4; i++) {
+                    world.spawnEntity(raidLocation, EntityType.PILLAGER);
+                }
+                world.spawnEntity(raidLocation, EntityType.VINDICATOR);
+                world.spawnEntity(raidLocation, EntityType.RAVAGER);
+                break;
+            case NORMAL:
+                for (int i = 0; i < 5; i++) {
+                    world.spawnEntity(raidLocation, EntityType.PILLAGER);
+                    world.spawnEntity(raidLocation, EntityType.VINDICATOR);
+                }
+                for (int i = 0; i < 2; i++) {
+                    world.spawnEntity(raidLocation, EntityType.RAVAGER);
+                }
+                world.spawnEntity(raidLocation, EntityType.WITCH);
+                world.spawnEntity(raidLocation, EntityType.EVOKER);
+                break;
+            case HARD:
+                for (int i = 0; i < 4; i++) {
+                    world.spawnEntity(raidLocation, EntityType.PILLAGER);
+                }
+                for (int i = 0; i < 7; i++) {
+                    world.spawnEntity(raidLocation, EntityType.VINDICATOR);
+                }
+                for (int i = 0; i < 2; i++) {
+                    world.spawnEntity(raidLocation, EntityType.WITCH);
+                    world.spawnEntity(raidLocation, EntityType.EVOKER);
+                    Ravager ravager = (Ravager) world.spawnEntity(raidLocation, EntityType.RAVAGER);
+                    Vindicator vindicator = (Vindicator) world.spawnEntity(raidLocation, EntityType.VINDICATOR);
+                    ravager.addPassenger(vindicator);
+                }
+                Ravager ravager = (Ravager) world.spawnEntity(raidLocation, EntityType.RAVAGER);
+                Evoker evoker = (Evoker) world.spawnEntity(raidLocation, EntityType.EVOKER);
+                ravager.addPassenger(evoker);
+                break;
         }
     }
 
