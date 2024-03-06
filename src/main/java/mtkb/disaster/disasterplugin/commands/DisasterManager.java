@@ -19,10 +19,10 @@ public class DisasterManager {
     private static List<Runnable> disasterList;
 
     public DisasterManager(BukkitScheduler scheduler, Double time) {
-        this.random = new Random();
+        random = new Random();
         this.scheduler = scheduler;
-        this.time = time;
-        this.disasterList = new ArrayList<>();
+        DisasterManager.time = time;
+        disasterList = new ArrayList<>();
         //disasterList.add(this::testDisaster); How to add disasters to list
         //disasterList.add(()-> exampleDisaster(x)); How to add disaster which takes a parameter
         disasterList.add(()-> potionEffectDisaster(-1));
@@ -31,7 +31,7 @@ public class DisasterManager {
     }
 
     public void setTime(double time){
-        this.time = time;
+        DisasterManager.time = time;
     }
 
     public static void performDisaster() {
