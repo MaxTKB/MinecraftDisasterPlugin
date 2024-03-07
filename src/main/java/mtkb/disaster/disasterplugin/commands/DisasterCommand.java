@@ -112,6 +112,26 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 }
                 return true;
             }
+            else if (args[0].equalsIgnoreCase("time")) {
+                if(args.length >=2) {
+                    try {
+                        double newTime = Double.parseDouble(args[1]);
+                        if(newTime<=0) {
+                            sender.sendMessage(Component.text("§cInvalid time value. Please provide a valid number."));
+                            return false;
+                        }
+                        else {
+                            plugin.setTime(newTime);
+                            Bukkit.getServer().sendMessage(Component.text("Disaster timer set to " + newTime + " minutes. A random disaster will occur every " + newTime + " minutes."));
+                        }
+                    }
+                    catch (NumberFormatException e) {
+                        sender.sendMessage(Component.text("§cInvalid time value. Please provide a valid number."));
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
         return false;
     }
@@ -161,9 +181,10 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             completions.add("enable");
             completions.add("disable");
             completions.add("force");
+            completions.add("time");
         }
         else if (args.length==2) {
-            if (args[0].equalsIgnoreCase("enable")) {
+            if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("time")) {
                 completions.add("5"); //Time between disasters
             }
             else if (args[0].equalsIgnoreCase("force")) {
