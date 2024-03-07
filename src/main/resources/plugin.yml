@@ -5,5 +5,5 @@ api-version: '1.20'
 commands:
   disaster:
     description: Commands associated with the disaster plugin.
-    usage: /disaster (enable | disable | force | time | countdown) <time | disasterId | effectId | countdown> <countdown>
+    usage: /disaster (enable | disable | force | time | countdown) <time | disasterId | countdown> <countdown | effectId>
     aliases: [dis, d]
