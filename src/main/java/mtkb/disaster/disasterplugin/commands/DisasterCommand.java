@@ -30,29 +30,43 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Component.text("Disaster plugin is already enabled"));
                 }
                 else {
-                    plugin.setDisasterEnabled(true);
                     if(args.length >=2) {
                         try {
                             double newTime = Double.parseDouble(args[1]);
-                            plugin.setTime(newTime);
-                            Bukkit.getServer().sendMessage(Component.text("Disaster timer set to "+newTime+" minutes. A random disaster will occur every "+newTime+" minutes."));
+                            if(newTime<=0) {
+                                sender.sendMessage(Component.text("§cInvalid time value. Please provide a valid number."));
+                                return false;
+                            }
+                            else {
+                                plugin.setTime(newTime);
+                                Bukkit.getServer().sendMessage(Component.text("Disaster timer set to " + newTime + " minutes. A random disaster will occur every " + newTime + " minutes."));
+                            }
                         }
                         catch (NumberFormatException e) {
-                            sender.sendMessage(Component.text("Invalid time value. Please provide a valid number. Using default value instead."));
+                            sender.sendMessage(Component.text("§cInvalid time value. Please provide a valid number."));
+                            return false;
                         }
                     }
 
                     if(args.length >=3) {
                         try {
                             int newCountdown = Integer.parseInt(args[2]);
-                            plugin.setCountdown(newCountdown);
-                            Bukkit.getServer().sendMessage(Component.text("Disaster countdown set to "+newCountdown+" seconds. Disaster timer will start in "+newCountdown+" seconds."));
+                            if(newCountdown<0) {
+                                sender.sendMessage(Component.text("§cInvalid countdown value. Please provide a valid number."));
+                                return false;
+                            }
+                            else {
+                                plugin.setCountdown(newCountdown);
+                                Bukkit.getServer().sendMessage(Component.text("Disaster countdown set to " + newCountdown + " seconds. Disaster timer will start in " + newCountdown + " seconds."));
+                            }
                         }
                         catch (NumberFormatException e){
-                            sender.sendMessage(Component.text("Invalid countdown value. Please provide a valid number. Using default value instead"));
+                            sender.sendMessage(Component.text("§cInvalid countdown value. Please provide a valid number."));
+                            return false;
                         }
                     }
                     Bukkit.getServer().sendMessage(Component.text("Disaster plugin enabled."));
+                    plugin.setDisasterEnabled(true);
                     plugin.startDisasterCycle();
                 }
                 return true;
