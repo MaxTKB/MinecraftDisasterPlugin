@@ -82,6 +82,9 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
             else if (args[0].equalsIgnoreCase("force")) {
+                if (args.length == 1) {
+                    DisasterManager.performDisaster();
+                }
                 if (args.length >= 2) {
                     String disasterType = args[1].toLowerCase();
                     switch (disasterType) {
