@@ -28,6 +28,7 @@ public class DisasterManager {
         disasterList.add(()-> potionEffectDisaster(-1));
         disasterList.add(DisasterManager::teleportDisaster);
         disasterList.add(DisasterManager::raidDisaster);
+        disasterList.add(DisasterManager::deleteItemDisaster);
     }
 
     public void setTime(double time){
@@ -194,6 +195,13 @@ public class DisasterManager {
                 Evoker evoker = (Evoker) world.spawnEntity(raidLocation, EntityType.EVOKER);
                 ravager.addPassenger(evoker);
                 break;
+        }
+    }
+
+    private static void deleteItemDisaster(){
+        Bukkit.broadcastMessage("§aDISASTER: DELETING ITEM IN HAND");
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.setItemInHand(null);
         }
     }
 
