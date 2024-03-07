@@ -1,7 +1,6 @@
 package mtkb.disaster.disasterplugin;
 
 import mtkb.disaster.disasterplugin.commands.DisasterCommand;
-import mtkb.disaster.disasterplugin.commands.DisasterManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;

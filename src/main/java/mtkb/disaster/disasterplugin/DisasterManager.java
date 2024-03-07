@@ -1,4 +1,4 @@
-package mtkb.disaster.disasterplugin.commands;
+package mtkb.disaster.disasterplugin;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;

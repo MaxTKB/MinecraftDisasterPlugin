@@ -1,5 +1,6 @@
 package mtkb.disaster.disasterplugin.commands;
 
+import mtkb.disaster.disasterplugin.DisasterManager;
 import mtkb.disaster.disasterplugin.DisasterPlugin;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
