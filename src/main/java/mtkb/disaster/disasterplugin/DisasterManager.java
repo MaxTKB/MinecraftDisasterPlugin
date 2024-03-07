@@ -1,6 +1,6 @@
 package mtkb.disaster.disasterplugin;
 
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -69,7 +69,7 @@ public class DisasterManager {
         // Wither 9
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Bukkit.broadcast(new TextComponent("§aDISASTER: RANDOM POTION EFFECT"));
+            Bukkit.getServer().sendMessage(Component.text("§aDISASTER: RANDOM POTION EFFECT"));
             int duration = 15 * 20;
             int effectId = random.nextInt(10);
             if (givenId != -1) {
@@ -110,7 +110,7 @@ public class DisasterManager {
                     potionEffect = new PotionEffect(PotionEffectType.WITHER, duration, 0);
                     break;
                 default:
-                    Bukkit.broadcast(new TextComponent("§cUnknown effect ID"));
+                    Bukkit.getServer().sendMessage(Component.text("§cUnknown effect ID"));
                     break;
             }
 
@@ -127,12 +127,12 @@ public class DisasterManager {
             World world = originalLocation.getWorld();
             Location newLocation = getSpawnableLocation(player, 50, true);
             player.teleport(newLocation);
-            Bukkit.broadcastMessage("§aDISASTER: TELEPORT TO RANDOM LOCATION");
+            Bukkit.getServer().sendMessage(Component.text("§aDISASTER: TELEPORT TO RANDOM LOCATION"));
         }
     }
 
     private static void raidDisaster() {
-        Bukkit.broadcastMessage("§aDISASTER: MAX LEVEL RAID");
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: MAX LEVEL RAID"));
         List<Player> onlinePlayers = (List<Player>) Bukkit.getOnlinePlayers();
         if (onlinePlayers.isEmpty()) {
             return;
@@ -157,7 +157,7 @@ public class DisasterManager {
 
         switch (difficulty) {
             case PEACEFUL:
-                Bukkit.broadcastMessage("§cDifficulty set to peaceful, cannot spawn raid.");
+                Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn raid."));
                 break;
             case EASY:
                 for (int i = 0; i < 4; i++) {
@@ -199,9 +199,9 @@ public class DisasterManager {
     }
 
     private static void deleteItemDisaster(){
-        Bukkit.broadcastMessage("§aDISASTER: DELETING ITEM IN HAND");
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: DELETING ITEM IN HAND"));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.setItemInHand(null);
+            player.getInventory().setItemInMainHand(null);
         }
     }
 
@@ -221,7 +221,6 @@ public class DisasterManager {
             newLocation = new Location(world, randX, randY, randZ);
             count++;
         }
-        //Bukkit.broadcastMessage("Location found on try "+count);
         if(!isSpawnable(newLocation) && !allowTop){
             newLocation=playerLocation;
         }

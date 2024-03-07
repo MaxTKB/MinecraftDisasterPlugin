@@ -2,7 +2,7 @@ package mtkb.disaster.disasterplugin.commands;
 
 import mtkb.disaster.disasterplugin.DisasterManager;
 import mtkb.disaster.disasterplugin.DisasterPlugin;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +27,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("enable")) {
                 // Enable disaster plugin here
                 if (plugin.isDisasterEnabled()) {
-                    sender.sendMessage("Disaster plugin is already enabled.");
+                    sender.sendMessage(Component.text("Disaster plugin is already enabled"));
                 }
                 else {
                     plugin.setDisasterEnabled(true);
@@ -35,10 +35,10 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                         try {
                             double newTime = Double.parseDouble(args[1]);
                             plugin.setTime(newTime);
-                            Bukkit.broadcast(new TextComponent("Disaster timer set to "+newTime+" minutes. A random disaster will occur every "+newTime+" minutes."));
+                            Bukkit.getServer().sendMessage(Component.text("Disaster timer set to "+newTime+" minutes. A random disaster will occur every "+newTime+" minutes."));
                         }
                         catch (NumberFormatException e) {
-                            sender.sendMessage("Invalid time value. Please provide a valid number. Using default value instead.");
+                            sender.sendMessage(Component.text("Invalid time value. Please provide a valid number. Using default value instead."));
                         }
                     }
 
@@ -46,13 +46,13 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                         try {
                             int newCountdown = Integer.parseInt(args[2]);
                             plugin.setCountdown(newCountdown);
-                            Bukkit.broadcast(new TextComponent("Disaster countdown set to "+newCountdown+" seconds. Disaster timer will start in "+newCountdown+" seconds."));
+                            Bukkit.getServer().sendMessage(Component.text("Disaster countdown set to "+newCountdown+" seconds. Disaster timer will start in "+newCountdown+" seconds."));
                         }
                         catch (NumberFormatException e){
-                            sender.sendMessage("Invalid countdown value. Please provide a valid number. Using default value instead");
+                            sender.sendMessage(Component.text("Invalid countdown value. Please provide a valid number. Using default value instead"));
                         }
                     }
-                    Bukkit.broadcast(new TextComponent("Disaster plugin enabled."));
+                    Bukkit.getServer().sendMessage(Component.text("Disaster plugin enabled."));
                     plugin.startDisasterCycle();
                 }
                 return true;
@@ -60,10 +60,10 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             else if (args[0].equalsIgnoreCase("disable")) {
                 if (plugin.isDisasterEnabled()) {
                     plugin.setDisasterEnabled(false);
-                    Bukkit.broadcast(new TextComponent("Disaster plugin disabled"));
+                    Bukkit.getServer().sendMessage(Component.text("Disaster plugin disabled"));
                     plugin.stopDisasterCycle();
                 } else {
-                    sender.sendMessage("Disaster plugin is already disabled.");
+                    sender.sendMessage(Component.text("Disaster plugin is already disabled."));
                 }
                 return true;
             }
@@ -89,7 +89,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                             DisasterManager.forceDisaster(Arrays.asList(3));
                             break;
                         default:
-                            sender.sendMessage("§cDisaster type not recognized.");
+                            sender.sendMessage(Component.text("§cDisaster type not recognized."));
                             break;
                     }
                 }

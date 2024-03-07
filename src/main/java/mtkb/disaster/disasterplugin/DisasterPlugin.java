@@ -1,6 +1,7 @@
 package mtkb.disaster.disasterplugin;
 
 import mtkb.disaster.disasterplugin.commands.DisasterCommand;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -57,11 +58,11 @@ public final class DisasterPlugin extends JavaPlugin {
         taskId = scheduler.scheduleSyncRepeatingTask(this, () -> {
             int remainingCount = countdownSeconds.decrementAndGet()+1;
             if (remainingCount > 0) {
-                Bukkit.broadcastMessage("Disaster cycle starting in "+remainingCount+ " seconds...");
+                Bukkit.getServer().sendMessage(Component.text("Disaster cycle starting in "+remainingCount+ " seconds..."));
             }
             else {
-                Bukkit.broadcastMessage("Disaster cycle starting...");
-                Bukkit.broadcastMessage("Random disaster will occur in "+getTime()+" minutes.");
+                Bukkit.getServer().sendMessage(Component.text("Disaster cycle starting..."));
+                Bukkit.getServer().sendMessage(Component.text("Random disaster will occur in "+getTime()+" minutes."));
                 scheduler.cancelTask(taskId); // Cancel countdown task
                 taskId = scheduler.runTaskTimer(this, this::performRandomDisaster, (long) (time*1200), (long) (time*1200)).getTaskId();
             }
@@ -74,7 +75,7 @@ public final class DisasterPlugin extends JavaPlugin {
 
     public void performRandomDisaster() {
         // Logic for random disasters
-        Bukkit.broadcastMessage("RANDOM DISASTER");
+        Bukkit.getServer().sendMessage(Component.text("RANDOM DISASTER"));
         DisasterManager.performDisaster();
     }
 
