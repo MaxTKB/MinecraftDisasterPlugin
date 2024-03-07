@@ -132,6 +132,26 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 }
                 return true;
             }
+            else if (args[0].equalsIgnoreCase("countdown")) {
+                if(args.length >=2) {
+                    try {
+                        int newCountdown = Integer.parseInt(args[1]);
+                        if(newCountdown<0) {
+                            sender.sendMessage(Component.text("§cInvalid countdown value. Please provide a valid number."));
+                            return false;
+                        }
+                        else {
+                            plugin.setCountdown(newCountdown);
+                            Bukkit.getServer().sendMessage(Component.text("Disaster countdown set to " + newCountdown + " seconds."));
+                        }
+                    }
+                    catch (NumberFormatException e){
+                        sender.sendMessage(Component.text("§cInvalid countdown value. Please provide a valid number."));
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
         return false;
     }
@@ -182,6 +202,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             completions.add("disable");
             completions.add("force");
             completions.add("time");
+            completions.add("countdown");
         }
         else if (args.length==2) {
             if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("time")) {
@@ -192,6 +213,9 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("teleport");
                 completions.add("raid");
                 completions.add("delete");
+            }
+            else if (args[0].equalsIgnoreCase("countdown")) {
+                completions.add("10"); //Countdown time
             }
         }
         else if (args.length==3) {
