@@ -38,6 +38,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::chargedCreeperDisaster);
         disasterList.add(DisasterManager::ghastDisaster);
         disasterList.add(DisasterManager::healthDisaster);
+        disasterList.add(DisasterManager::doubleDisaster);
     }
 
     public void setTime(double time){
@@ -268,6 +269,12 @@ public class DisasterManager {
     public static void restorePlayerHealth(Player player) {
         Bukkit.getServer().sendMessage(Component.text("§aRESTORING HEALTH"));
         player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+    }
+
+    private static void doubleDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: DOUBLE DISASTER"));
+        performDisaster();
+        performDisaster();
     }
 
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
