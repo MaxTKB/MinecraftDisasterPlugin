@@ -30,6 +30,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::raidDisaster);
         disasterList.add(DisasterManager::deleteItemDisaster);
         disasterList.add(DisasterManager::chargedCreeperDisaster);
+        disasterList.add(DisasterManager::ghastDisaster);
     }
 
     public void setTime(double time){
@@ -220,6 +221,28 @@ public class DisasterManager {
         }
     }
 
+    // wardenDisaster
+
+    private static void ghastDisaster() {
+        Bukkit.broadcastMessage("§aDISASTER: SPAWNING GHAST");
+        int radius = 20;
+        List<Player> onlinePlayers = (List<Player>) Bukkit.getOnlinePlayers();
+        if (onlinePlayers.isEmpty()) {
+            return;
+        }
+        for (Player player : onlinePlayers) {
+            World world = player.getWorld();
+            if (world.getDifficulty()==Difficulty.PEACEFUL) {
+                Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn ghast."));
+                break;
+            }
+            Location spawnLocation = getSpawnableGhast(player, radius);
+            for (int i = 0; i < 3; i++) {
+                world.spawnEntity(spawnLocation, EntityType.GHAST);
+            }
+        }
+    }
+
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
         int count=0;
         int maxAttempts=100;
@@ -247,6 +270,53 @@ public class DisasterManager {
             newLocation = highestBlock.getLocation().add(0.5,1,0.5);
         }
         return newLocation;
+    }
+
+    private static Location getSpawnableGhast(Player player, int radius){
+        // Make it so that checks around +-2 blocks in every location to ensure that ghast has enough space to spawn
+        int count = 0;
+        int maxAttempts = 100;
+        Location playerLocation = player.getLocation();
+        World world = player.getWorld();
+        double randX = playerLocation.getX() + random.nextInt(2*radius) - radius;
+        double randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
+        double randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
+        Location newLocation = new Location(world, randX, randY, randZ);
+        while(!isAir(newLocation.getBlock()) && count<maxAttempts && !airSurrouds(newLocation, 4)) {
+            randX = playerLocation.getX() + random.nextInt(2*radius) - radius;
+            randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
+            randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
+            newLocation = new Location(world, randX, randY, randZ);
+            count++;
+        }
+        if(!isAir(newLocation.getBlock())) {
+            Block highestBlock = world.getHighestBlockAt(newLocation);
+            while(highestBlock.getType() == Material.AIR) {
+                highestBlock = highestBlock.getRelative(0,-1,0);
+            }
+            newLocation = highestBlock.getLocation().add(0.5,radius,0.5);
+        }
+        return newLocation;
+    }
+
+    private static boolean airSurrouds(Location location, int radius) {
+        int locationX = location.getBlockX();
+        int locationY = location.getBlockY();
+        int locationZ = location.getBlockZ();
+        World world = location.getWorld();
+
+        // Radius = 4 in this circumstance
+        // Modify to allow checking for specified radius
+        for (int x = locationX - 2; x<= locationX + 1; x++){
+            for (int y = locationY; y <= locationY +3; y++) {
+                for (int z = locationZ - 2; z <= locationZ + 1; z++) {
+                    if(!isAir(world.getBlockAt(x,y,z))){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private static boolean isSpawnable(Location location){
