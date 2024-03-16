@@ -24,7 +24,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length >= 1) {
-            if (args[0].equalsIgnoreCase("enable")) {
+            if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("start")) {
                 // Enable disaster plugin here
                 if (plugin.isDisasterEnabled()) {
                     sender.sendMessage(Component.text("Disaster plugin is already enabled"));
@@ -71,7 +71,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 }
                 return true;
             }
-            else if (args[0].equalsIgnoreCase("disable")) {
+            else if (args[0].equalsIgnoreCase("disable") || args[0].equalsIgnoreCase("stop")) {
                 if (plugin.isDisasterEnabled()) {
                     plugin.setDisasterEnabled(false);
                     Bukkit.getServer().sendMessage(Component.text("Disaster plugin disabled"));
@@ -206,9 +206,11 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             completions.add("force");
             completions.add("time");
             completions.add("countdown");
+            completions.add("start");
+            completions.add("stop");
         }
         else if (args.length==2) {
-            if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("time")) {
+            if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("time") || args[0].equalsIgnoreCase("start")) {
                 completions.add("5"); //Time between disasters
             }
             else if (args[0].equalsIgnoreCase("force")) {
@@ -223,7 +225,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             }
         }
         else if (args.length==3) {
-            if (args[0].equalsIgnoreCase("enable")) {
+            if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("start")) {
                 completions.add("10"); //Countdown time
             }
             else if (args[0].equalsIgnoreCase("force") && args[1].equalsIgnoreCase("potion")){
