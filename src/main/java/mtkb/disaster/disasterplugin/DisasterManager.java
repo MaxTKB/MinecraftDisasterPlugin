@@ -2,8 +2,11 @@ package mtkb.disaster.disasterplugin;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -14,13 +17,16 @@ import java.util.Random;
 
 public class DisasterManager {
     private static Random random;
-    private final BukkitScheduler scheduler;
+    private static BukkitScheduler scheduler;
     private static Double time;
     private static List<Runnable> disasterList;
 
-    public DisasterManager(BukkitScheduler scheduler, Double time) {
+    private static Plugin plugin;
+
+    public DisasterManager(Plugin plugin, Double time) {
         random = new Random();
-        this.scheduler = scheduler;
+        this.plugin = plugin;
+        this.scheduler = plugin.getServer().getScheduler();
         DisasterManager.time = time;
         disasterList = new ArrayList<>();
         //disasterList.add(this::testDisaster); How to add disasters to list
@@ -31,6 +37,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::deleteItemDisaster);
         disasterList.add(DisasterManager::chargedCreeperDisaster);
         disasterList.add(DisasterManager::ghastDisaster);
+        disasterList.add(DisasterManager::healthDisaster);
     }
 
     public void setTime(double time){
@@ -224,7 +231,7 @@ public class DisasterManager {
     // wardenDisaster
 
     private static void ghastDisaster() {
-        Bukkit.broadcastMessage("§aDISASTER: SPAWNING GHAST");
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SPAWNING GHAST"));
         int radius = 20;
         List<Player> onlinePlayers = (List<Player>) Bukkit.getOnlinePlayers();
         if (onlinePlayers.isEmpty()) {
@@ -241,6 +248,26 @@ public class DisasterManager {
                 world.spawnEntity(spawnLocation, EntityType.GHAST);
             }
         }
+    }
+
+    private static void healthDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: MAX HEALTH = 1 HEART"));
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            double newMaxHealth = 2.0;
+            player.setHealth(newMaxHealth);
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHealth);
+
+            if(player.getHealth() > newMaxHealth) {
+                player.setHealth(newMaxHealth);
+            }
+
+            scheduler.runTaskLater(plugin, () -> restorePlayerHealth(player), (long) (20*time*60));
+        }
+    }
+
+    public static void restorePlayerHealth(Player player) {
+        Bukkit.getServer().sendMessage(Component.text("§aRESTORING HEALTH"));
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
     }
 
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {

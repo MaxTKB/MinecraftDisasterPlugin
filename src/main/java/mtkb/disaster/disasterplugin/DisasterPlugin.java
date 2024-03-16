@@ -23,8 +23,7 @@ public final class DisasterPlugin extends JavaPlugin {
 
         getCommand("disaster").setExecutor(new DisasterCommand(this));
         getCommand("disaster").setTabCompleter(new DisasterCommand(this));
-        BukkitScheduler scheduler = getServer().getScheduler();
-        disasterManager = new DisasterManager(scheduler, time);
+        disasterManager = new DisasterManager(this, time);
     }
 
     public boolean isDisasterEnabled() {

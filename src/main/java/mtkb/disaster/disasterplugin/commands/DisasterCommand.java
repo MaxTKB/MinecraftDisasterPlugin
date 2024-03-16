@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +110,16 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                             break;
                         case "ghast":
                             DisasterManager.forceDisaster(5);
+                            break;
+                        case "health":
+                            if (args.length>=3 && args[2].equalsIgnoreCase("restore")) {
+                                for (Player player : Bukkit.getOnlinePlayers()) {
+                                    DisasterManager.restorePlayerHealth(player);
+                                }
+                            }
+                            else {
+                                DisasterManager.forceDisaster(6);
+                            }
                             break;
                         default:
                             sender.sendMessage(Component.text("§cDisaster type not recognized."));
@@ -222,6 +233,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("delete");
                 completions.add("creeper");
                 completions.add("ghast");
+                completions.add("health");
             }
             else if (args[0].equalsIgnoreCase("countdown")) {
                 completions.add("10"); //Countdown time
@@ -242,6 +254,9 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("slowness");
                 completions.add("weakness");
                 completions.add("wither");
+            }
+            else if (args[0].equalsIgnoreCase("force") && args[1].equalsIgnoreCase("health")) {
+                completions.add("restore");
             }
         }
         return completions;
