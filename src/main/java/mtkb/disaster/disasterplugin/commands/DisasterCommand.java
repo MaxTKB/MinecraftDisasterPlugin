@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DisasterCommand implements CommandExecutor, TabCompleter {
@@ -91,22 +90,22 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                         case "potion":
                             if (args.length >= 3) {
                                 int effectId = getEffectId(args[2].toLowerCase());
-                                DisasterManager.forceDisaster(Arrays.asList(0, effectId));
+                                DisasterManager.forceDisaster(0, effectId);
                             } else {
-                                DisasterManager.forceDisaster(Arrays.asList(0));
+                                DisasterManager.forceDisaster(0);
                             }
                             break;
                         case "teleport":
-                            DisasterManager.forceDisaster(Arrays.asList(1));
+                            DisasterManager.forceDisaster(1);
                             break;
                         case "raid":
-                            DisasterManager.forceDisaster(Arrays.asList(2));
+                            DisasterManager.forceDisaster(2);
                             break;
                         case "delete":
-                            DisasterManager.forceDisaster(Arrays.asList(3));
+                            DisasterManager.forceDisaster(3);
                             break;
                         case "creeper":
-                            DisasterManager.forceDisaster(Arrays.asList(4));
+                            DisasterManager.forceDisaster(4);
                             break;
                         default:
                             sender.sendMessage(Component.text("§cDisaster type not recognized."));
