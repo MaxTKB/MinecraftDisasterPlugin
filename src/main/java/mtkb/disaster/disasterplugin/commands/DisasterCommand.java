@@ -105,6 +105,9 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                         case "delete":
                             DisasterManager.forceDisaster(Arrays.asList(3));
                             break;
+                        case "creeper":
+                            DisasterManager.forceDisaster(Arrays.asList(4));
+                            break;
                         default:
                             sender.sendMessage(Component.text("§cDisaster type not recognized."));
                             break;
@@ -213,6 +216,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("teleport");
                 completions.add("raid");
                 completions.add("delete");
+                completions.add("creeper");
             }
             else if (args[0].equalsIgnoreCase("countdown")) {
                 completions.add("10"); //Countdown time

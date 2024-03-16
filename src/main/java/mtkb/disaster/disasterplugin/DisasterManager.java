@@ -29,6 +29,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::teleportDisaster);
         disasterList.add(DisasterManager::raidDisaster);
         disasterList.add(DisasterManager::deleteItemDisaster);
+        disasterList.add(DisasterManager::chargedCreeperDisaster);
     }
 
     public void setTime(double time){
@@ -198,10 +199,25 @@ public class DisasterManager {
         }
     }
 
-    private static void deleteItemDisaster(){
+    private static void deleteItemDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: DELETING ITEM IN HAND"));
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.getInventory().setItemInMainHand(null);
+        }
+    }
+
+    private static void chargedCreeperDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SPAWNING CHARGED CREEPER"));
+        int radius = 10;
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            World world = player.getWorld();
+            if (world.getDifficulty()==Difficulty.PEACEFUL){
+                Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn charged creeper."));
+                break;
+            }
+            Location spawnLocation = getSpawnableLocation(player, radius, false);
+            Creeper creeper = (Creeper) world.spawnEntity(spawnLocation, EntityType.CREEPER);
+            creeper.setPowered(true); // Set creeper to be charged
         }
     }
 
