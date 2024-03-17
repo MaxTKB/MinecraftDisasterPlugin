@@ -46,6 +46,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::wolfDisaster);
         disasterList.add(DisasterManager::undeadInvasionDisaster);
         disasterList.add(DisasterManager::shuffleInventoryDisaster);
+        disasterList.add(DisasterManager::swapInventoryDisaster);
     }
 
     public void setTime(double time){
@@ -341,7 +342,7 @@ public class DisasterManager {
         for (Player player: Bukkit.getOnlinePlayers()) {
             World world = player.getWorld();
             if (world.getDifficulty()==Difficulty.PEACEFUL){
-                Bukkit.broadcastMessage("§cDifficulty set to peaceful, cannot spawn mobs.");
+                Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn mobs."));
                 break;
             }
             Location spawnLocation = getSpawnableLocation(player, 10, false);
@@ -379,6 +380,27 @@ public class DisasterManager {
                 inventory.setItem(i, randomItem);
                 inventory.setItem(randomSlot, currentItem);
             }
+        }
+    }
+
+    private static void swapInventoryDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SWAPPING INVENTORIES"));
+
+        List<Player> onlinePlayers = (List<Player>) Bukkit.getOnlinePlayers();
+        if (onlinePlayers.size() <= 1) {
+            Bukkit.getServer().sendMessage(Component.text("§cNot enough players online to swap inventories."));
+            return;
+        }
+
+        ItemStack[][] contentsArray = new ItemStack[onlinePlayers.size()][];
+        for (int i = 0; i< onlinePlayers.size(); i++) {
+            ItemStack[] contents = onlinePlayers.get(i).getInventory().getContents();
+            contentsArray[i] = contents;
+        }
+
+        for (int i = 0; i < onlinePlayers.size(); i++) {
+            int nextIndex = (i+1) % onlinePlayers.size();
+            onlinePlayers.get(i).getInventory().setContents(contentsArray[nextIndex]);
         }
     }
 
