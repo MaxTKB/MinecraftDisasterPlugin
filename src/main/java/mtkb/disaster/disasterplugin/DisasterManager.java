@@ -5,6 +5,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -40,6 +41,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::healthDisaster);
         disasterList.add(DisasterManager::doubleDisaster);
         disasterList.add(DisasterManager::teleportSwapDisaster);
+        disasterList.add(DisasterManager::mlgWaterDisaster);
     }
 
     public void setTime(double time){
@@ -278,7 +280,7 @@ public class DisasterManager {
         performDisaster();
     }
 
-    private static void teleportSwapDisaster(){
+    private static void teleportSwapDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SWAPPING LOCATIONS"));
         Player[] onlinePlayers = Bukkit.getOnlinePlayers().toArray(new Player[0]);
         if (onlinePlayers.length <= 1) {
@@ -293,6 +295,27 @@ public class DisasterManager {
         for (int i = 0; i < onlinePlayers.length; i++) {
             int nextIndex = (i+1) % onlinePlayers.length;
             onlinePlayers[i].teleport(initialLocations[nextIndex]);
+        }
+    }
+
+    private static void mlgWaterDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: MLG WATER"));
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Location playerLocation = player.getLocation();
+            World world = player.getWorld();
+            if (!world.getName().equals("world_nether")) { // If player is not in Nether
+                player.getInventory().setItemInMainHand(new ItemStack(Material.WATER_BUCKET));
+                Block highestBlock = world.getHighestBlockAt(playerLocation);
+                while (highestBlock.getType() == Material.AIR) {
+                    highestBlock = highestBlock.getRelative(0,-1,0);
+                }
+                Location newLocation = highestBlock.getLocation().add(0.5,50,0.5);
+                newLocation.setPitch(90.0f);
+                player.teleport(newLocation);
+            }
+            else {
+                player.sendMessage(Component.text("§cYou got lucky this time."));
+            }
         }
     }
 
