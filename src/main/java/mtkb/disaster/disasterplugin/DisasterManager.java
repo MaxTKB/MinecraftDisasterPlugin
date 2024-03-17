@@ -39,6 +39,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::ghastDisaster);
         disasterList.add(DisasterManager::healthDisaster);
         disasterList.add(DisasterManager::doubleDisaster);
+        disasterList.add(DisasterManager::teleportSwapDisaster);
     }
 
     public void setTime(double time){
@@ -275,6 +276,24 @@ public class DisasterManager {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: DOUBLE DISASTER"));
         performDisaster();
         performDisaster();
+    }
+
+    private static void teleportSwapDisaster(){
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SWAPPING LOCATIONS"));
+        Player[] onlinePlayers = Bukkit.getOnlinePlayers().toArray(new Player[0]);
+        if (onlinePlayers.length <= 1) {
+            Bukkit.getServer().sendMessage(Component.text("§cNot enough players online to swap locations."));
+            return;
+        }
+        Location[] initialLocations = new Location[onlinePlayers.length];
+        for (int i = 0; i < onlinePlayers.length; i++) {
+            initialLocations[i] = onlinePlayers[i].getLocation().clone();
+        }
+
+        for (int i = 0; i < onlinePlayers.length; i++) {
+            int nextIndex = (i+1) % onlinePlayers.length;
+            onlinePlayers[i].teleport(initialLocations[nextIndex]);
+        }
     }
 
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
