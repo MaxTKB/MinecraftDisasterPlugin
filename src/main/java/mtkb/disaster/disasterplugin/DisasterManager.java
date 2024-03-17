@@ -5,6 +5,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,6 +45,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::mlgWaterDisaster);
         disasterList.add(DisasterManager::wolfDisaster);
         disasterList.add(DisasterManager::undeadInvasionDisaster);
+        disasterList.add(DisasterManager::shuffleInventoryDisaster);
     }
 
     public void setTime(double time){
@@ -358,6 +360,24 @@ public class DisasterManager {
                 PigZombie pigZombie = (PigZombie) world.spawnEntity(spawnLocation, EntityType.ZOMBIFIED_PIGLIN);
                 pigZombie.setAngry(true);
                 pigZombie.setTarget(player);
+            }
+        }
+    }
+
+    private static void shuffleInventoryDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SHUFFLING INVENTORY"));
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            Inventory inventory = player.getInventory();
+            int inventorySize = inventory.getSize();
+
+            for (int i = 0; i < inventorySize; i++) {
+                int randomSlot = random.nextInt(inventorySize-1);
+
+                ItemStack currentItem = inventory.getItem(i);
+                ItemStack randomItem = inventory.getItem(randomSlot);
+
+                inventory.setItem(i, randomItem);
+                inventory.setItem(randomSlot, currentItem);
             }
         }
     }
