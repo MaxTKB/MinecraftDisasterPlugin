@@ -133,6 +133,9 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                         case "wolf":
                             DisasterManager.forceDisaster(10);
                             break;
+                        case "undead":
+                            DisasterManager.forceDisaster(11);
+                            break;
                         default:
                             sender.sendMessage(Component.text("§cDisaster type not recognized."));
                             break;
@@ -250,6 +253,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("posswap");
                 completions.add("mlg");
                 completions.add("wolf");
+                completions.add("undead");
             }
             else if (args[0].equalsIgnoreCase("countdown")) {
                 completions.add("10"); //Countdown time

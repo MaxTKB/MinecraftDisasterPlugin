@@ -43,6 +43,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::teleportSwapDisaster);
         disasterList.add(DisasterManager::mlgWaterDisaster);
         disasterList.add(DisasterManager::wolfDisaster);
+        disasterList.add(DisasterManager::undeadInvasionDisaster);
     }
 
     public void setTime(double time){
@@ -329,6 +330,34 @@ public class DisasterManager {
                 Wolf wolf = (Wolf) world.spawnEntity(playerLocation, EntityType.WOLF);
                 wolf.setAngry(true);
                 wolf.setTarget(player);
+            }
+        }
+    }
+
+    private static void undeadInvasionDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: UNDEAD INVASION"));
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            World world = player.getWorld();
+            if (world.getDifficulty()==Difficulty.PEACEFUL){
+                Bukkit.broadcastMessage("§cDifficulty set to peaceful, cannot spawn mobs.");
+                break;
+            }
+            Location spawnLocation = getSpawnableLocation(player, 10, false);
+            for (int i = 0; i < 1; i++) {
+                ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
+                Zombie zombie = (Zombie) world.spawnEntity(spawnLocation, EntityType.ZOMBIE);
+                zombie.getEquipment().setHelmet(helmet);
+                Skeleton skeleton = (Skeleton) world.spawnEntity(spawnLocation, EntityType.SKELETON);
+                skeleton.getEquipment().setHelmet(helmet);
+                Drowned drowned = (Drowned) world.spawnEntity(spawnLocation, EntityType.DROWNED);
+                drowned.getEquipment().setHelmet(helmet);
+                world.spawnEntity(spawnLocation, EntityType.HUSK);
+                Stray stray = (Stray) world.spawnEntity(spawnLocation, EntityType.STRAY);
+                stray.getEquipment().setHelmet(helmet);
+                world.spawnEntity(spawnLocation, EntityType.WITHER_SKELETON);
+                PigZombie pigZombie = (PigZombie) world.spawnEntity(spawnLocation, EntityType.ZOMBIFIED_PIGLIN);
+                pigZombie.setAngry(true);
+                pigZombie.setTarget(player);
             }
         }
     }
