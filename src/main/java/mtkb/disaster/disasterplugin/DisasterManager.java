@@ -42,6 +42,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::doubleDisaster);
         disasterList.add(DisasterManager::teleportSwapDisaster);
         disasterList.add(DisasterManager::mlgWaterDisaster);
+        disasterList.add(DisasterManager::wolfDisaster);
     }
 
     public void setTime(double time){
@@ -315,6 +316,19 @@ public class DisasterManager {
             }
             else {
                 player.sendMessage(Component.text("§cYou got lucky this time."));
+            }
+        }
+    }
+
+    private static void wolfDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: ANGRY WOLVES"));
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            World world = player.getWorld();
+            Location playerLocation = player.getLocation();
+            for (int i = 0; i < 5; i++) {
+                Wolf wolf = (Wolf) world.spawnEntity(playerLocation, EntityType.WOLF);
+                wolf.setAngry(true);
+                wolf.setTarget(player);
             }
         }
     }
