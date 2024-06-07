@@ -3,6 +3,7 @@ package mtkb.disaster.disasterplugin;
 import mtkb.disaster.disasterplugin.commands.DisasterCommand;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -11,8 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class DisasterPlugin extends JavaPlugin {
 
     private boolean enabled = false; //Default is disabled
-    private double time = 5.0;
-    private int countdown = 10;
+    private double time;
+    private int countdown;
     private int taskId; //To store the ID of the scheduled task
     private DisasterManager disasterManager;
 
@@ -21,9 +22,34 @@ public final class DisasterPlugin extends JavaPlugin {
         // Plugin startup logic
         Bukkit.getLogger().info("Disaster Plugin has started...");
 
+        // Create a default config file if it does not already exist
+        saveDefaultConfig();
+
+        // Attempt to load the values from the config file
+        loadConfigValues();
+
         getCommand("disaster").setExecutor(new DisasterCommand(this));
         getCommand("disaster").setTabCompleter(new DisasterCommand(this));
         disasterManager = new DisasterManager(this, time);
+    }
+
+    private void loadConfigValues() {
+        // Load config file
+        FileConfiguration config = getConfig();
+
+        // Add default values for countdown and time
+        config.addDefault("countdown", 10);
+        config.addDefault("time", 5.0);
+
+        // Copy the defaults to the config if they do not already exist
+        config.options().copyDefaults(true);
+
+        // Get values from config, if they have been changed it will be the values set by the user rather than default
+        countdown = config.getInt("countdown");
+        time = config.getDouble("time");
+
+        // Save the config file
+        saveConfig();
     }
 
     public boolean isDisasterEnabled() {
