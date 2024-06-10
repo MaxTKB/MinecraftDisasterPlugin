@@ -7,10 +7,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::undeadInvasionDisaster);
         disasterList.add(DisasterManager::shuffleInventoryDisaster);
         disasterList.add(DisasterManager::swapInventoryDisaster);
+        disasterList.add(DisasterManager::sunburnDisaster);
     }
 
     public void setTime(double time){
@@ -404,6 +407,28 @@ public class DisasterManager {
         }
     }
 
+    private static void sunburnDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SUNBURN"));
+
+        new BukkitRunnable() {
+            double sunburnTime = time;
+            @Override
+            public void run() {
+                long timeOfDay = Bukkit.getWorlds().get(0).getTime() % 24000;
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    boolean underSun = player.getLocation().getBlock().getLightFromSky() == 15;
+                    if (underSun && (timeOfDay < 12542) && !isWearingFullArmor(player)) {
+                        player.setFireTicks(40);
+                    }
+                }
+                sunburnTime = sunburnTime-1.0/60;
+                if(sunburnTime<=0) {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+    }
+
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
         int count=0;
         int maxAttempts=100;
@@ -493,5 +518,10 @@ public class DisasterManager {
 
     private static boolean isAir(Block block) {
         return(block.getType() == Material.AIR || block.getType() == Material.CAVE_AIR);
+    }
+
+    private static boolean isWearingFullArmor(Player player) {
+        PlayerInventory playerInv = player.getInventory();
+        return(playerInv.getHelmet()!= null && playerInv.getChestplate() != null && playerInv.getLeggings() != null && playerInv.getBoots() != null);
     }
 }
