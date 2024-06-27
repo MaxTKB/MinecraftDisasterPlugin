@@ -112,16 +112,16 @@ public class DisasterManager {
                     potionEffect = new PotionEffect(PotionEffectType.LEVITATION, duration, 0);
                     break;
                 case 4:
-                    potionEffect = new PotionEffect(PotionEffectType.SLOW_DIGGING, duration, 1);
+                    potionEffect = new PotionEffect(PotionEffectType.MINING_FATIGUE, duration, 1);
                     break;
                 case 5:
-                    potionEffect = new PotionEffect(PotionEffectType.CONFUSION, duration, 0);
+                    potionEffect = new PotionEffect(PotionEffectType.NAUSEA, duration, 0);
                     break;
                 case 6:
                     potionEffect = new PotionEffect(PotionEffectType.POISON, duration, 0);
                     break;
                 case 7:
-                    potionEffect = new PotionEffect(PotionEffectType.SLOW, duration, 1);
+                    potionEffect = new PotionEffect(PotionEffectType.SLOWNESS, duration, 1);
                     break;
                 case 8:
                     potionEffect = new PotionEffect(PotionEffectType.WEAKNESS, duration, 1);
