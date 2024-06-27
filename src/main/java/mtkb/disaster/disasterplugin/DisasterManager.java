@@ -9,7 +9,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -316,7 +315,7 @@ public class DisasterManager {
             Location playerLocation = player.getLocation();
             World world = player.getWorld();
             if (!world.getName().equals("world_nether")) { // If player is not in Nether
-                player.getInventory().setItemInMainHand(new ItemStack(Material.WATER_BUCKET));
+                player.getInventory().setItemInMainHand(ItemStack.of(Material.WATER_BUCKET));
                 Block highestBlock = world.getHighestBlockAt(playerLocation);
                 while (highestBlock.getType() == Material.AIR) {
                     highestBlock = highestBlock.getRelative(0,-1,0);
@@ -354,7 +353,7 @@ public class DisasterManager {
             }
             Location spawnLocation = getSpawnableLocation(player, 10, false);
             for (int i = 0; i < 1; i++) {
-                ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
+                ItemStack helmet = ItemStack.of(Material.LEATHER_HELMET);
                 Zombie zombie = (Zombie) world.spawnEntity(spawnLocation, EntityType.ZOMBIE);
                 zombie.getEquipment().setHelmet(helmet);
                 Skeleton skeleton = (Skeleton) world.spawnEntity(spawnLocation, EntityType.SKELETON);
@@ -368,6 +367,8 @@ public class DisasterManager {
                 PigZombie pigZombie = (PigZombie) world.spawnEntity(spawnLocation, EntityType.ZOMBIFIED_PIGLIN);
                 pigZombie.setAngry(true);
                 pigZombie.setTarget(player);
+                Bogged bogged = (Bogged) world.spawnEntity(spawnLocation, EntityType.BOGGED);
+                bogged.getEquipment().setHelmet(helmet);
             }
         }
     }
@@ -472,7 +473,7 @@ public class DisasterManager {
         double randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
         double randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
         Location newLocation = new Location(world, randX, randY, randZ);
-        while(!isAir(newLocation.getBlock()) && count<maxAttempts && !airSurrouds(newLocation, 4)) {
+        while(!isAir(newLocation.getBlock()) && count<maxAttempts && !airSurrounds(newLocation, 4)) {
             randX = playerLocation.getX() + random.nextInt(2*radius) - radius;
             randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
             randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
@@ -489,7 +490,7 @@ public class DisasterManager {
         return newLocation;
     }
 
-    private static boolean airSurrouds(Location location, int radius) {
+    private static boolean airSurrounds(Location location, int radius) {
         int locationX = location.getBlockX();
         int locationY = location.getBlockY();
         int locationZ = location.getBlockZ();
