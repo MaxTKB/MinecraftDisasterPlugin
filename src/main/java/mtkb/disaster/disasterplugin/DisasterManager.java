@@ -505,7 +505,7 @@ public class DisasterManager {
         double randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
         double randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
         Location newLocation = new Location(world, randX, randY, randZ);
-        while(!isAir(newLocation.getBlock()) && count<maxAttempts && !airSurrounds(newLocation, 4)) {
+        while(!isAir(newLocation.getBlock()) && count<maxAttempts && !airSurrounds(newLocation)) {
             randX = playerLocation.getX() + random.nextInt(2*radius) - radius;
             randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
             randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
@@ -522,7 +522,8 @@ public class DisasterManager {
         return newLocation;
     }
 
-    private static boolean airSurrounds(Location location, int radius) {
+    // Used to check if an area is big enough to spawn a ghast, only usage right now is in the ghast disaster so can be left as is for now
+    private static boolean airSurrounds(Location location) {
         int locationX = location.getBlockX();
         int locationY = location.getBlockY();
         int locationZ = location.getBlockZ();
