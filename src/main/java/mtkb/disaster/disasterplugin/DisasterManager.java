@@ -49,6 +49,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::shuffleInventoryDisaster);
         disasterList.add(DisasterManager::swapInventoryDisaster);
         disasterList.add(DisasterManager::sunburnDisaster);
+        disasterList.add(DisasterManager::realSpiderDisaster);
     }
 
     public void setTime(double time){
@@ -432,6 +433,37 @@ public class DisasterManager {
                 }
             }
         }.runTaskTimer(plugin, 0L, 20L);
+    }
+
+    private static void realSpiderDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: ARACHNOPHOBIA"));
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            World world = player.getWorld();
+            if (world.getDifficulty() == Difficulty.PEACEFUL) {
+                Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn mobs."));
+                break;
+            }
+
+            // Set scale between 0.1 and 0.3 for normal spiders
+            // Set scale between 0.2 and 0.4 for cave spiders
+
+            Location spawnLocation = getSpawnableLocation(player, 5, false);
+
+            for (int i=0; i<3; i++) {
+                double spiderSize = 0.1 + (0.3-0.1) * random.nextDouble();
+                double caveSpiderSize = 0.2 + (0.4-0.2) * random.nextDouble();
+                Spider spider = (Spider) world.spawnEntity(spawnLocation, EntityType.SPIDER);
+                CaveSpider caveSpider = (CaveSpider) world.spawnEntity(spawnLocation, EntityType.CAVE_SPIDER);
+                spider.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(spiderSize);
+                spider.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(1);
+                caveSpider.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(caveSpiderSize);
+                caveSpider.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(1);
+                spider.setAggressive(true);
+                spider.setTarget(player);
+                caveSpider.setAggressive(true);
+                caveSpider.setTarget(player);
+            }
+        }
     }
 
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
