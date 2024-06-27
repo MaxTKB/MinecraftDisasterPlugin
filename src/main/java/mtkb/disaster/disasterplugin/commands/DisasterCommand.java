@@ -208,6 +208,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             // Slowness 7
             // Weakness 8
             // Wither 9
+            // Infested 10
             case "blindness":
                 return 0;
             case "darkness":
@@ -228,9 +229,11 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 return 8;
             case "wither":
                 return 9;
+            case "infested":
+                return 10;
             default:
                 //Bukkit.broadcastMessage("Unknown effect ID");
-                return 10;
+                return 11;
         }
     }
 
@@ -286,6 +289,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("slowness");
                 completions.add("weakness");
                 completions.add("wither");
+                completions.add("infested");
             }
             else if (args[0].equalsIgnoreCase("force") && args[1].equalsIgnoreCase("health")) {
                 completions.add("restore");

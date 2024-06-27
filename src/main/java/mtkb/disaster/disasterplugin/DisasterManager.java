@@ -87,11 +87,11 @@ public class DisasterManager {
         // Slowness 7
         // Weakness 8
         // Wither 9
+        // Infested 10
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Bukkit.getServer().sendMessage(Component.text("§aDISASTER: RANDOM POTION EFFECT"));
             int duration = 15 * 20;
-            int effectId = random.nextInt(10);
+            int effectId = random.nextInt(11);
             if (givenId != -1) {
                 effectId = givenId;
             }
@@ -129,15 +129,19 @@ public class DisasterManager {
                 case 9:
                     potionEffect = new PotionEffect(PotionEffectType.WITHER, duration, 0);
                     break;
+                case 10:
+                    potionEffect = new PotionEffect(PotionEffectType.INFESTED, duration, 0);
+                    break;
                 default:
                     Bukkit.getServer().sendMessage(Component.text("§cUnknown effect ID"));
-                    break;
+                    return;
             }
 
             if (potionEffect != null) {
                 player.addPotionEffect(potionEffect);
             }
         }
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: RANDOM POTION EFFECT"));
     }
 
     private static void teleportDisaster() {
