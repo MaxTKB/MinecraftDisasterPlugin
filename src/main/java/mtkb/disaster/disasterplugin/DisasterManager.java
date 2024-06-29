@@ -575,12 +575,6 @@ public class DisasterManager {
             }
             newLocation = highestBlock.getLocation().add(0.5,1,0.5);
         }
-        Bukkit.getServer().sendMessage(Component.text("§cFound spot in "+count+" tries."));
-        double finalX = newLocation.getX();
-        double finalY = newLocation.getY();
-        double finalZ = newLocation.getZ();
-        String content = String.format("§cFinal position = X:%f Y:%f Z:%f", finalX, finalY, finalZ);
-        Bukkit.getServer().sendMessage(Component.text(content));
         return newLocation;
     }
 
