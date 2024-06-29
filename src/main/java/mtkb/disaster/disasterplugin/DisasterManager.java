@@ -5,6 +5,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -50,6 +51,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::swapInventoryDisaster);
         disasterList.add(DisasterManager::sunburnDisaster);
         disasterList.add(DisasterManager::realSpiderDisaster);
+        disasterList.add(DisasterManager::giantDisaster);
     }
 
     public void setTime(double time){
@@ -466,6 +468,33 @@ public class DisasterManager {
         }
     }
 
+    private static void giantDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: GIANT ATTACK"));
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            World world = player.getWorld();
+            if (world.getDifficulty() == Difficulty.PEACEFUL) {
+                Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn mobs."));
+                break;
+            }
+            Location spawnLocation = getSpawnableGiant(player, 10);
+            Zombie zombie = (Zombie) world.spawnEntity(spawnLocation, EntityType.ZOMBIE);
+            zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(100);
+            zombie.setHealth(100);
+            zombie.setAge(0);
+            zombie.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(26);
+            zombie.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(6);
+            zombie.customName(Component.text("Giant"));
+            zombie.setCustomNameVisible(true);
+            zombie.setCanPickupItems(false);
+            EntityEquipment zombieInv = zombie.getEquipment();
+            zombieInv.setItemInMainHand(null);
+            zombieInv.setHelmet(null);
+            zombieInv.setChestplate(null);
+            zombieInv.setLeggings(null);
+            zombieInv.setBoots(null);
+        }
+    }
+
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
         int count=0;
         int maxAttempts=100;
@@ -520,6 +549,58 @@ public class DisasterManager {
             newLocation = highestBlock.getLocation().add(0.5,radius,0.5);
         }
         return newLocation;
+    }
+
+    private static Location getSpawnableGiant(Player player, int radius) {
+        int count = 0;
+        int maxAttempts = 100;
+        Location playerLocation = player.getLocation();
+        World world = player.getWorld();
+        double randX = playerLocation.getX() + random.nextInt(2*radius) - radius;
+        double randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
+        double randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
+        Location newLocation = new Location(world, randX, randY, randZ);
+        while(!hasGiantSpace(newLocation) && count<maxAttempts) {
+            randX = playerLocation.getX() + random.nextInt(2*radius) - radius;
+            randY = playerLocation.getY() + random.nextInt(2*radius) - radius;
+            randZ = playerLocation.getZ() + random.nextInt(2*radius) - radius;
+            newLocation = new Location(world, randX, randY, randZ);
+            count++;
+        }
+
+        if (!isSpawnable(newLocation) && !hasGiantSpace(newLocation)) {
+            Block highestBlock = world.getHighestBlockAt(newLocation);
+            while (highestBlock.getType() == Material.AIR) {
+                highestBlock = highestBlock.getRelative(0,-1,0);
+            }
+            newLocation = highestBlock.getLocation().add(0.5,1,0.5);
+        }
+        Bukkit.getServer().sendMessage(Component.text("§cFound spot in "+count+" tries."));
+        double finalX = newLocation.getX();
+        double finalY = newLocation.getY();
+        double finalZ = newLocation.getZ();
+        String content = String.format("§cFinal position = X:%f Y:%f Z:%f", finalX, finalY, finalZ);
+        Bukkit.getServer().sendMessage(Component.text(content));
+        return newLocation;
+    }
+
+    private static boolean hasGiantSpace(Location location) {
+        World world = location.getWorld();
+        int locationX = location.getBlockX();
+        int locationY = location.getBlockY();
+        int locationZ = location.getBlockZ();
+
+        for (int x = locationX -1 ; x<= locationX + 4; x++){
+            for (int y = locationY; y <= locationY +13; y++) {
+                for (int z = locationZ -1; z <= locationZ + 4; z++) {
+                    if(!isAir(world.getBlockAt(x,y,z))){
+                        return false;
+                    }
+                }
+            }
+        }
+        Block blockBeneath = world.getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
+        return blockBeneath.getType().isSolid();
     }
 
     // Used to check if an area is big enough to spawn a ghast, only usage right now is in the ghast disaster so can be left as is for now

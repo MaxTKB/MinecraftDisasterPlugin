@@ -148,6 +148,9 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                         case "spiders":
                             DisasterManager.forceDisaster(15);
                             break;
+                        case "giant":
+                            DisasterManager.forceDisaster(16);
+                            break;
                         default:
                             sender.sendMessage(Component.text("§cDisaster type not recognized."));
                             break;
@@ -273,6 +276,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("invswap");
                 completions.add("sunburn");
                 completions.add("spiders");
+                completions.add("giant");
             }
             else if (args[0].equalsIgnoreCase("countdown")) {
                 completions.add("10"); //Countdown time
