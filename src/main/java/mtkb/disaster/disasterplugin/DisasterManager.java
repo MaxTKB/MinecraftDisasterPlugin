@@ -264,7 +264,8 @@ public class DisasterManager {
             }
             Location spawnLocation = getSpawnableGhast(player, radius);
             for (int i = 0; i < 3; i++) {
-                world.spawnEntity(spawnLocation, EntityType.GHAST);
+                Ghast ghast = (Ghast) world.spawnEntity(spawnLocation, EntityType.GHAST);
+                ghast.setTarget(player);
             }
         }
     }
