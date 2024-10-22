@@ -52,6 +52,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::sunburnDisaster);
         disasterList.add(DisasterManager::realSpiderDisaster);
         disasterList.add(DisasterManager::giantDisaster);
+        disasterList.add(DisasterManager::killerBunnyDisaster);
     }
 
     public void setTime(double time){
@@ -492,6 +493,20 @@ public class DisasterManager {
             zombieInv.setChestplate(null);
             zombieInv.setLeggings(null);
             zombieInv.setBoots(null);
+        }
+    }
+
+    private static void killerBunnyDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: KILLER BUNNY ATTACK"));
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            World world = player.getWorld();
+            if (world.getDifficulty() == Difficulty.PEACEFUL) {
+                Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn mobs."));
+                break;
+            }
+            Location spawnLocation = getSpawnableLocation(player, 5, false);
+            Rabbit rabbit = (Rabbit) world.spawnEntity(spawnLocation, EntityType.RABBIT);
+            rabbit.setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
         }
     }
 
