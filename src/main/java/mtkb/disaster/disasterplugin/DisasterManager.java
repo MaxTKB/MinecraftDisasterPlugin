@@ -54,6 +54,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::giantDisaster);
         disasterList.add(DisasterManager::killerBunnyDisaster);
         disasterList.add(DisasterManager::timeWarpDisaster);
+        disasterList.add(DisasterManager::noJumpDisaster);
     }
 
     public void setTime(double time){
@@ -539,6 +540,15 @@ public class DisasterManager {
         for (Player player: Bukkit.getOnlinePlayers()) {
             double defaultSpeed = 0.10000000149011612;
             player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(defaultSpeed);
+        }
+    }
+
+    private static void noJumpDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: NO JUMPING"));
+        double defaultJump = 0.41999998688697815;
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH).setBaseValue(0);
+            scheduler.runTaskLater(plugin, () -> player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH).setBaseValue(defaultJump), (long) (20*time*60));
         }
     }
 

@@ -162,6 +162,9 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                                 DisasterManager.forceDisaster(18);
                             }
                             break;
+                        case "nojump":
+                            DisasterManager.forceDisaster(19);
+                            break;
                         default:
                             sender.sendMessage(Component.text("§cDisaster type not recognized."));
                             break;
@@ -290,6 +293,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("giant");
                 completions.add("bunny");
                 completions.add("timewarp");
+                completions.add("nojump");
             }
             else if (args[0].equalsIgnoreCase("countdown")) {
                 completions.add("10"); //Countdown time
