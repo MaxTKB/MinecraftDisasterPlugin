@@ -154,6 +154,14 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                         case "bunny":
                             DisasterManager.forceDisaster(17);
                             break;
+                        case "timewarp":
+                            if (args.length>=3 && args[2].equalsIgnoreCase("reset")) {
+                                DisasterManager.resetSpeed();
+                            }
+                            else {
+                                DisasterManager.forceDisaster(18);
+                            }
+                            break;
                         default:
                             sender.sendMessage(Component.text("§cDisaster type not recognized."));
                             break;
@@ -281,6 +289,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("spiders");
                 completions.add("giant");
                 completions.add("bunny");
+                completions.add("timewarp");
             }
             else if (args[0].equalsIgnoreCase("countdown")) {
                 completions.add("10"); //Countdown time
@@ -305,6 +314,9 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             }
             else if (args[0].equalsIgnoreCase("force") && args[1].equalsIgnoreCase("health")) {
                 completions.add("restore");
+            }
+            else if (args[0].equalsIgnoreCase("force") && args[1].equalsIgnoreCase("timewarp")) {
+                completions.add("reset");
             }
         }
         return completions;

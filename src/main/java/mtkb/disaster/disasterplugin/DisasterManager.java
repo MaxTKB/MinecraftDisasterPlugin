@@ -53,6 +53,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::realSpiderDisaster);
         disasterList.add(DisasterManager::giantDisaster);
         disasterList.add(DisasterManager::killerBunnyDisaster);
+        disasterList.add(DisasterManager::timeWarpDisaster);
     }
 
     public void setTime(double time){
@@ -508,6 +509,36 @@ public class DisasterManager {
             Location spawnLocation = getSpawnableLocation(player, 5, false);
             Rabbit rabbit = (Rabbit) world.spawnEntity(spawnLocation, EntityType.RABBIT);
             rabbit.setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
+        }
+    }
+
+    private static void timeWarpDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: TIME WARP"));
+        int tickSpeed = 20;
+        double multiplyer = 0.5 + (2.0 - 0.5)*Math.random();
+        double newTickSpeed = Math.round(tickSpeed*multiplyer*10.0)/10.0;
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tick rate "+newTickSpeed);
+        if (multiplyer>1.0) {
+            for (Player player: Bukkit.getOnlinePlayers()) {
+                double defaultSpeed = 0.10000000149011612;
+                double newSpeed = defaultSpeed*multiplyer;
+                int hasteLvl = (int) Math.round(5*(multiplyer-1));
+                PotionEffect hasteEffect = new PotionEffect(PotionEffectType.HASTE, Integer.MAX_VALUE, hasteLvl, false, false, true);
+                player.addPotionEffect(hasteEffect);
+                player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(newSpeed);
+                scheduler.runTaskLater(plugin, () -> {
+                    player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(defaultSpeed);
+                    player.removePotionEffect(PotionEffectType.HASTE);
+                }, (long) (newTickSpeed*time*60));
+            }
+        }
+        scheduler.runTaskLater(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tick rate 20"), (long) (newTickSpeed*time*60));
+    }
+
+    public static void resetSpeed() {
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            double defaultSpeed = 0.10000000149011612;
+            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(defaultSpeed);
         }
     }
 
