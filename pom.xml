@@ -6,7 +6,7 @@
 
     <groupId>mtkb.disaster</groupId>
     <artifactId>disasterplugin</artifactId>
-    <version>1.0.0-alpha.37</version>
+    <version>1.0.0-alpha.38</version>
     <packaging>jar</packaging>
 
     <name>DisasterPlugin</name>

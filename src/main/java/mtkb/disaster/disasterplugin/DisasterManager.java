@@ -56,6 +56,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::timeWarpDisaster);
         disasterList.add(DisasterManager::noJumpDisaster);
         disasterList.add(DisasterManager::shortArmsDisaster);
+        disasterList.add(DisasterManager::wardenDisaster);
     }
 
     public void setTime(double time){
@@ -249,8 +250,6 @@ public class DisasterManager {
             creeper.setPowered(true); // Set creeper to be charged
         }
     }
-
-    // wardenDisaster
 
     private static void ghastDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SPAWNING GHAST"));
@@ -569,6 +568,19 @@ public class DisasterManager {
         // entity interaction range = 3
         player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE).setBaseValue(4.5);
         player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE).setBaseValue(3);
+    }
+
+    private static void wardenDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: WARDEN"));
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            Location playerLocation = player.getLocation();
+            Location spawnLocation = getSpawnableLocation(player, 10, false);
+            World world = player.getWorld();
+            Warden warden = (Warden) world.spawnEntity(spawnLocation, EntityType.WARDEN);
+            world.playSound(spawnLocation, "entity.warden.emerge", 5.0f, 1.0f);
+            warden.setAnger(player, 80);
+            warden.setDisturbanceLocation(playerLocation);
+        }
     }
 
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
