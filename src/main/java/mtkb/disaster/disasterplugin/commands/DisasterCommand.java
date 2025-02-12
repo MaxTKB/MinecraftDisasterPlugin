@@ -165,6 +165,16 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                         case "nojump":
                             DisasterManager.forceDisaster(19);
                             break;
+                        case "arms":
+                            if (args.length>=3 && args[2].equalsIgnoreCase("reset")) {
+                                for (Player player : Bukkit.getOnlinePlayers()) {
+                                    DisasterManager.resetReach(player);
+                                }
+                            }
+                            else {
+                                DisasterManager.forceDisaster(20);
+                            }
+                            break;
                         default:
                             sender.sendMessage(Component.text("§cDisaster type not recognized."));
                             break;
@@ -294,6 +304,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
                 completions.add("bunny");
                 completions.add("timewarp");
                 completions.add("nojump");
+                completions.add("arms");
             }
             else if (args[0].equalsIgnoreCase("countdown")) {
                 completions.add("10"); //Countdown time
@@ -319,7 +330,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             else if (args[0].equalsIgnoreCase("force") && args[1].equalsIgnoreCase("health")) {
                 completions.add("restore");
             }
-            else if (args[0].equalsIgnoreCase("force") && args[1].equalsIgnoreCase("timewarp")) {
+            else if (args[0].equalsIgnoreCase("force") && (args[1].equalsIgnoreCase("timewarp") || args[1].equalsIgnoreCase("arms"))) {
                 completions.add("reset");
             }
         }

@@ -55,6 +55,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::killerBunnyDisaster);
         disasterList.add(DisasterManager::timeWarpDisaster);
         disasterList.add(DisasterManager::noJumpDisaster);
+        disasterList.add(DisasterManager::shortArmsDisaster);
     }
 
     public void setTime(double time){
@@ -550,6 +551,24 @@ public class DisasterManager {
             player.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(0);
             scheduler.runTaskLater(plugin, () -> player.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(defaultJump), (long) (20*time*60));
         }
+    }
+
+    private static void shortArmsDisaster() {
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SHORT ARMS"));
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE).setBaseValue(2);
+            player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE).setBaseValue(0.5);
+            scheduler.runTaskLater(plugin, () -> resetReach(player), (long) (20*time*60));
+        }
+        scheduler.runTaskLater(plugin, () -> Bukkit.getServer().sendMessage(Component.text("§aRESTORING REACH")), (long) (20*time*60));
+    }
+
+    public static void resetReach(Player player) {
+        // Default values are:
+        // block interaction range = 4.5
+        // entity interaction range = 3
+        player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE).setBaseValue(4.5);
+        player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE).setBaseValue(3);
     }
 
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
