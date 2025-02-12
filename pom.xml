@@ -6,7 +6,7 @@
 
     <groupId>mtkb.disaster</groupId>
     <artifactId>disasterplugin</artifactId>
-    <version>1.0.0-alpha.35</version>
+    <version>1.0.0-alpha.36</version>
     <packaging>jar</packaging>
 
     <name>DisasterPlugin</name>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.1-R0.1-SNAPSHOT</version>
+            <version>1.21.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -277,7 +277,7 @@ public class DisasterManager {
         for (Player player : Bukkit.getOnlinePlayers()) {
             double newMaxHealth = 2.0;
             player.setHealth(newMaxHealth);
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHealth);
+            player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(newMaxHealth);
 
             if(player.getHealth() > newMaxHealth) {
                 player.setHealth(newMaxHealth);
@@ -285,11 +285,11 @@ public class DisasterManager {
 
             scheduler.runTaskLater(plugin, () -> restorePlayerHealth(player), (long) (20*time*60));
         }
+        scheduler.runTaskLater(plugin, () -> Bukkit.getServer().sendMessage(Component.text("§aRESTORING HEALTH")), (long) (20*time*60));
     }
 
     public static void restorePlayerHealth(Player player) {
-        Bukkit.getServer().sendMessage(Component.text("§aRESTORING HEALTH"));
-        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+        player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(20.0);
     }
 
     private static void doubleDisaster() {
@@ -460,10 +460,10 @@ public class DisasterManager {
                 double caveSpiderSize = 0.2 + (0.4-0.2) * random.nextDouble();
                 Spider spider = (Spider) world.spawnEntity(spawnLocation, EntityType.SPIDER);
                 CaveSpider caveSpider = (CaveSpider) world.spawnEntity(spawnLocation, EntityType.CAVE_SPIDER);
-                spider.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(spiderSize);
-                spider.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(1);
-                caveSpider.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(caveSpiderSize);
-                caveSpider.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(1);
+                spider.getAttribute(Attribute.SCALE).setBaseValue(spiderSize);
+                spider.getAttribute(Attribute.MAX_HEALTH).setBaseValue(1);
+                caveSpider.getAttribute(Attribute.SCALE).setBaseValue(caveSpiderSize);
+                caveSpider.getAttribute(Attribute.MAX_HEALTH).setBaseValue(1);
                 spider.setAggressive(true);
                 spider.setTarget(player);
                 caveSpider.setAggressive(true);
@@ -482,11 +482,11 @@ public class DisasterManager {
             }
             Location spawnLocation = getSpawnableGiant(player, 10);
             Zombie zombie = (Zombie) world.spawnEntity(spawnLocation, EntityType.ZOMBIE);
-            zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(100);
+            zombie.getAttribute(Attribute.MAX_HEALTH).setBaseValue(100);
             zombie.setHealth(100);
             zombie.setAge(0);
-            zombie.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(26);
-            zombie.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(6);
+            zombie.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(26);
+            zombie.getAttribute(Attribute.SCALE).setBaseValue(6);
             zombie.customName(Component.text("Giant"));
             zombie.setCustomNameVisible(true);
             zombie.setCanPickupItems(false);
@@ -526,9 +526,9 @@ public class DisasterManager {
                 int hasteLvl = (int) Math.round(5*(multiplyer-1));
                 PotionEffect hasteEffect = new PotionEffect(PotionEffectType.HASTE, Integer.MAX_VALUE, hasteLvl, false, false, true);
                 player.addPotionEffect(hasteEffect);
-                player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(newSpeed);
+                player.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(newSpeed);
                 scheduler.runTaskLater(plugin, () -> {
-                    player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(defaultSpeed);
+                    player.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(defaultSpeed);
                     player.removePotionEffect(PotionEffectType.HASTE);
                 }, (long) (newTickSpeed*time*60));
             }
@@ -539,7 +539,7 @@ public class DisasterManager {
     public static void resetSpeed() {
         for (Player player: Bukkit.getOnlinePlayers()) {
             double defaultSpeed = 0.10000000149011612;
-            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(defaultSpeed);
+            player.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(defaultSpeed);
         }
     }
 
@@ -547,8 +547,8 @@ public class DisasterManager {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: NO JUMPING"));
         double defaultJump = 0.41999998688697815;
         for (Player player: Bukkit.getOnlinePlayers()) {
-            player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH).setBaseValue(0);
-            scheduler.runTaskLater(plugin, () -> player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH).setBaseValue(defaultJump), (long) (20*time*60));
+            player.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(0);
+            scheduler.runTaskLater(plugin, () -> player.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(defaultJump), (long) (20*time*60));
         }
     }
 
