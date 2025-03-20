@@ -580,6 +580,11 @@ public class DisasterManager {
             world.playSound(spawnLocation, "entity.warden.emerge", 5.0f, 1.0f);
             warden.setAnger(player, 80);
             warden.setDisturbanceLocation(playerLocation);
+            scheduler.runTaskLater(plugin, () -> {
+                Location newLocation = player.getLocation();
+                world.playSound(newLocation, "entity.warden.dig", 5.0f, 1.0f);
+                warden.remove();
+            }, (long) (20*time*60));
         }
     }
 
