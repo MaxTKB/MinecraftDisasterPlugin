@@ -57,6 +57,7 @@ public class DisasterManager {
         disasterList.add(DisasterManager::noJumpDisaster);
         disasterList.add(DisasterManager::shortArmsDisaster);
         disasterList.add(DisasterManager::wardenDisaster);
+        disasterList.add(DisasterManager::tinyDisaster);
     }
 
     public void setTime(double time){
@@ -586,6 +587,26 @@ public class DisasterManager {
                 warden.remove();
             }, (long) (20*time*60));
         }
+    }
+
+    private static void tinyDisaster() { // WORKSHOP IT
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: TINY AND FRAGILE"));
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            player.getAttribute(Attribute.SCALE).setBaseValue(0.5); // Default 1.0
+            player.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(0.5); // Default 1.0
+            player.setHealth(10.0);
+            player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(10.0); // Default 20.0
+            scheduler.runTaskLater(plugin, () -> {
+                resetSize(player);
+            }, (long) (20*time*60));
+        }
+        scheduler.runTaskLater(plugin, () -> Bukkit.getServer().sendMessage(Component.text("§aRESTORING SIZE")), (long) (20*time*60));
+    }
+
+    public static void resetSize(Player player) {
+        player.getAttribute(Attribute.SCALE).setBaseValue(1.0); // Default 1.0
+        player.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(1.0); // Default 1.0
+        player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(20.0); // Default 20.0
     }
 
     private static Location getSpawnableLocation(Player player, int radius, boolean allowTop) {
