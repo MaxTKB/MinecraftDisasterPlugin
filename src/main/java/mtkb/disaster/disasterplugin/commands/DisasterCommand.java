@@ -197,6 +197,11 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             }
             else if (args[0].equalsIgnoreCase("time")) {
                 if(args.length >=2) {
+                    if (args[1].equalsIgnoreCase("get")) {
+                        double curTime = plugin.getTime();
+                        sender.sendMessage(Component.text("Currently the time is set to " +curTime+ " minutes. When the disaster cycle is activated a disaster will occur every " +curTime+ " minutes."));
+                        return true;
+                    }
                     try {
                         double newTime = Double.parseDouble(args[1]);
                         if(newTime<=0) {
@@ -217,6 +222,11 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             }
             else if (args[0].equalsIgnoreCase("countdown")) {
                 if(args.length >=2) {
+                    if (args[1].equalsIgnoreCase("get")) {
+                        double curCount = plugin.getCountdown();
+                        sender.sendMessage(Component.text("Currently the countdown is set to " +curCount+ " seconds. When the disaster cycle is activated there will be a countdown of " +curCount+ " seconds before the disaster cycle starts."));
+                        return true;
+                    }
                     try {
                         int newCountdown = Integer.parseInt(args[1]);
                         if(newCountdown<0) {
@@ -293,7 +303,7 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             completions.add("stop");
         }
         else if (args.length==2) {
-            if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("time") || args[0].equalsIgnoreCase("start")) {
+            if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("start")) {
                 completions.add("5"); //Time between disasters
             }
             else if (args[0].equalsIgnoreCase("force")) {
@@ -323,6 +333,11 @@ public class DisasterCommand implements CommandExecutor, TabCompleter {
             }
             else if (args[0].equalsIgnoreCase("countdown")) {
                 completions.add("10"); //Countdown time
+                completions.add("get"); //Get the countdown time
+            }
+            else if (args[0].equalsIgnoreCase("time")) {
+                completions.add("5"); //Time between disasters
+                completions.add("get"); //Get the time
             }
         }
         else if (args.length==3) {
