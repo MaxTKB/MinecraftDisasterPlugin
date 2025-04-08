@@ -155,12 +155,10 @@ public class DisasterManager {
     private static void teleportDisaster() {
         int teleportRadius = 50;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Location originalLocation = player.getLocation();
-            World world = originalLocation.getWorld();
-            Location newLocation = getSpawnableLocation(player, 50, true);
+            Location newLocation = getSpawnableLocation(player, teleportRadius, true);
             player.teleport(newLocation);
-            Bukkit.getServer().sendMessage(Component.text("§aDISASTER: TELEPORT TO RANDOM LOCATION"));
         }
+        Bukkit.getServer().sendMessage(Component.text("§aDISASTER: TELEPORT TO RANDOM LOCATION"));
     }
 
     private static void raidDisaster() {
