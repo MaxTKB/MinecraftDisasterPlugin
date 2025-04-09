@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class DisasterManager {
     private static Random random;
@@ -145,7 +146,7 @@ public class DisasterManager {
                     return;
             }
 
-            if (potionEffect != null) {
+            if (player.getGameMode()!= GameMode.SPECTATOR) {
                 player.addPotionEffect(potionEffect);
             }
         }
@@ -155,15 +156,24 @@ public class DisasterManager {
     private static void teleportDisaster() {
         int teleportRadius = 50;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Location newLocation = getSpawnableLocation(player, teleportRadius, true);
-            player.teleport(newLocation);
+            if (player.getGameMode()!= GameMode.SPECTATOR) {
+                Location newLocation = getSpawnableLocation(player, teleportRadius, true);
+                player.teleport(newLocation);
+            }
         }
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: TELEPORT TO RANDOM LOCATION"));
     }
 
     private static void raidDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: MAX LEVEL RAID"));
-        List<Player> onlinePlayers = (List<Player>) Bukkit.getOnlinePlayers();
+        List<Player> onlinePlayers = new ArrayList<>();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() != GameMode.SPECTATOR) {
+                onlinePlayers.add(player);
+            }
+        }
+
         if (onlinePlayers.isEmpty()) {
             return;
         }
@@ -231,7 +241,9 @@ public class DisasterManager {
     private static void deleteItemDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: DELETING ITEM IN HAND"));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.getInventory().setItemInMainHand(null);
+            if (player.getGameMode() != GameMode.SPECTATOR) {
+                player.getInventory().setItemInMainHand(null);
+            }
         }
     }
 
@@ -244,9 +256,11 @@ public class DisasterManager {
                 Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn charged creeper."));
                 break;
             }
-            Location spawnLocation = getSpawnableLocation(player, radius, false);
-            Creeper creeper = (Creeper) world.spawnEntity(spawnLocation, EntityType.CREEPER);
-            creeper.setPowered(true); // Set creeper to be charged
+            if (player.getGameMode() != GameMode.SPECTATOR) {
+                Location spawnLocation = getSpawnableLocation(player, radius, false);
+                Creeper creeper = (Creeper) world.spawnEntity(spawnLocation, EntityType.CREEPER);
+                creeper.setPowered(true); // Set creeper to be charged
+            }
         }
     }
 
@@ -263,6 +277,9 @@ public class DisasterManager {
                 Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn ghast."));
                 break;
             }
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             Location spawnLocation = getSpawnableGhast(player, radius);
             for (int i = 0; i < 3; i++) {
                 Ghast ghast = (Ghast) world.spawnEntity(spawnLocation, EntityType.GHAST);
@@ -274,6 +291,9 @@ public class DisasterManager {
     private static void healthDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: MAX HEALTH = 1 HEART"));
         for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             double newMaxHealth = 2.0;
             player.setHealth(newMaxHealth);
             player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(newMaxHealth);
@@ -299,25 +319,32 @@ public class DisasterManager {
 
     private static void teleportSwapDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SWAPPING LOCATIONS"));
-        Player[] onlinePlayers = Bukkit.getOnlinePlayers().toArray(new Player[0]);
-        if (onlinePlayers.length <= 1) {
+
+        // Create a player list that filters out all players that are in spectator mode
+        List<Player> onlinePlayers = Bukkit.getOnlinePlayers().stream().filter(player -> player.getGameMode() != GameMode.SPECTATOR).collect(Collectors.toList());
+
+        Player[] playerArray = onlinePlayers.toArray(new Player[0]);
+        if (playerArray.length <= 1) {
             Bukkit.getServer().sendMessage(Component.text("§cNot enough players online to swap locations."));
             return;
         }
-        Location[] initialLocations = new Location[onlinePlayers.length];
-        for (int i = 0; i < onlinePlayers.length; i++) {
-            initialLocations[i] = onlinePlayers[i].getLocation().clone();
+        Location[] initialLocations = new Location[playerArray.length];
+        for (int i = 0; i < playerArray.length; i++) {
+            initialLocations[i] = playerArray[i].getLocation().clone();
         }
 
-        for (int i = 0; i < onlinePlayers.length; i++) {
-            int nextIndex = (i+1) % onlinePlayers.length;
-            onlinePlayers[i].teleport(initialLocations[nextIndex]);
+        for (int i = 0; i < playerArray.length; i++) {
+            int nextIndex = (i+1) % playerArray.length;
+            playerArray[i].teleport(initialLocations[nextIndex]);
         }
     }
 
     private static void mlgWaterDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: MLG WATER"));
         for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             Location playerLocation = player.getLocation();
             World world = player.getWorld();
             if (!world.getName().equals("world_nether")) { // If player is not in Nether
@@ -339,6 +366,9 @@ public class DisasterManager {
     private static void wolfDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: ANGRY WOLVES"));
         for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             World world = player.getWorld();
             Location playerLocation = player.getLocation();
             for (int i = 0; i < 5; i++) {
@@ -356,6 +386,9 @@ public class DisasterManager {
             if (world.getDifficulty()==Difficulty.PEACEFUL){
                 Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn mobs."));
                 break;
+            }
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
             }
             Location spawnLocation = getSpawnableLocation(player, 10, false);
             for (int i = 0; i < 1; i++) {
@@ -382,6 +415,9 @@ public class DisasterManager {
     private static void shuffleInventoryDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SHUFFLING INVENTORY"));
         for (Player player: Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             Inventory inventory = player.getInventory();
             int inventorySize = inventory.getSize();
 
@@ -400,7 +436,8 @@ public class DisasterManager {
     private static void swapInventoryDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SWAPPING INVENTORIES"));
 
-        List<Player> onlinePlayers = (List<Player>) Bukkit.getOnlinePlayers();
+        // Create a player list that filters out all players that are in spectator mode
+        List<Player> onlinePlayers = Bukkit.getOnlinePlayers().stream().filter(player -> player.getGameMode() != GameMode.SPECTATOR).collect(Collectors.toList());
         if (onlinePlayers.size() <= 1) {
             Bukkit.getServer().sendMessage(Component.text("§cNot enough players online to swap inventories."));
             return;
@@ -427,6 +464,9 @@ public class DisasterManager {
             public void run() {
                 long timeOfDay = Bukkit.getWorlds().get(0).getTime() % 24000;
                 for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (player.getGameMode() == GameMode.SPECTATOR) {
+                        continue; // Skip if the player is in spectator mode
+                    }
                     boolean underSun = player.getLocation().getBlock().getLightFromSky() == 15;
                     if (underSun && (timeOfDay < 12542) && !isWearingFullArmor(player)) {
                         player.setFireTicks(40);
@@ -447,6 +487,10 @@ public class DisasterManager {
             if (world.getDifficulty() == Difficulty.PEACEFUL) {
                 Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn mobs."));
                 break;
+            }
+
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
             }
 
             // Set scale between 0.1 and 0.3 for normal spiders
@@ -479,6 +523,9 @@ public class DisasterManager {
                 Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn mobs."));
                 break;
             }
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             Location spawnLocation = getSpawnableGiant(player, 10);
             Zombie zombie = (Zombie) world.spawnEntity(spawnLocation, EntityType.ZOMBIE);
             zombie.getAttribute(Attribute.MAX_HEALTH).setBaseValue(100);
@@ -506,6 +553,9 @@ public class DisasterManager {
                 Bukkit.getServer().sendMessage(Component.text("§cDifficulty set to peaceful, cannot spawn mobs."));
                 break;
             }
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             Location spawnLocation = getSpawnableLocation(player, 5, false);
             Rabbit rabbit = (Rabbit) world.spawnEntity(spawnLocation, EntityType.RABBIT);
             rabbit.setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
@@ -520,6 +570,9 @@ public class DisasterManager {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tick rate "+newTickSpeed);
         if (multiplyer>1.0) {
             for (Player player: Bukkit.getOnlinePlayers()) {
+                if (player.getGameMode() == GameMode.SPECTATOR) {
+                    continue; // Skip if the player is in spectator mode
+                }
                 double defaultSpeed = 0.10000000149011612;
                 double newSpeed = defaultSpeed*multiplyer;
                 int hasteLvl = (int) Math.round(5*(multiplyer-1));
@@ -536,6 +589,7 @@ public class DisasterManager {
     }
 
     public static void resetSpeed() {
+        // Perhaps make this runnable with the /disaster command
         for (Player player: Bukkit.getOnlinePlayers()) {
             double defaultSpeed = 0.10000000149011612;
             player.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(defaultSpeed);
@@ -546,6 +600,9 @@ public class DisasterManager {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: NO JUMPING"));
         double defaultJump = 0.41999998688697815;
         for (Player player: Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             player.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(0);
             scheduler.runTaskLater(plugin, () -> player.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(defaultJump), (long) (20*time*60));
         }
@@ -554,6 +611,9 @@ public class DisasterManager {
     private static void shortArmsDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: SHORT ARMS"));
         for (Player player: Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE).setBaseValue(2);
             player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE).setBaseValue(0.5);
             scheduler.runTaskLater(plugin, () -> resetReach(player), (long) (20*time*60));
@@ -572,6 +632,9 @@ public class DisasterManager {
     private static void wardenDisaster() {
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: WARDEN"));
         for (Player player: Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             Location playerLocation = player.getLocation();
             Location spawnLocation = getSpawnableLocation(player, 10, false);
             World world = player.getWorld();
@@ -590,6 +653,9 @@ public class DisasterManager {
     private static void tinyDisaster() { // WORKSHOP IT
         Bukkit.getServer().sendMessage(Component.text("§aDISASTER: TINY AND FRAGILE"));
         for (Player player: Bukkit.getOnlinePlayers()) {
+            if (player.getGameMode() == GameMode.SPECTATOR) {
+                continue; // Skip if the player is in spectator mode
+            }
             player.getAttribute(Attribute.SCALE).setBaseValue(0.5); // Default 1.0
             player.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(0.5); // Default 1.0
             player.setHealth(10.0);
